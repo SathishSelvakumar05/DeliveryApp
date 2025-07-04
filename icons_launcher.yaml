@@ -1,0 +1,8 @@
+icons_launcher:
+  image_path: "assets/images/logo.jpg"
+#  notification_image: "assets/ic_foreground.png"
+  platforms:
+    android:
+      enable: true
+    ios:
+      enable: true
