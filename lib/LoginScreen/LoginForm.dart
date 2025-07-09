@@ -4,6 +4,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../CustomerScreen/CustomerDashboard/CustomerDashboard.dart';
 import '../Firebase/LocalNotification/LocalNotification.dart';
+import '../GuruTasks/DistanceCalculator/WalkTrackerScreen.dart';
 import '../LanguageChanger/Tamil2English.dart';
 import '../ShareApp/PdfScreen.dart';
 import '../ShareInternet/ShareEmailScreen.dart';
@@ -74,7 +75,8 @@ class _MyHomePageState extends State<MyHomePage> {
               title: 'Get Started with Customer',
               buttonColor: Color(0xFF0C1D37),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>DashboardScreen() ,));
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>WalkTrackerScreen() ,));
+                // Navigator.push(context, MaterialPageRoute(builder: (context) =>DashboardScreen() ,));
                 // Navigator.push(context, MaterialPageRoute(builder: (context) =>FirebaeSignUpScreen() ,));
                  //Navigator.push(context, MaterialPageRoute(builder: (context) =>MobileLoginScreen(Role: "Customer",) ,));
                 print('Customer tapped');

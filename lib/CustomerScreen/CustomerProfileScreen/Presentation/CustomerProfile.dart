@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+// import 'package:package_info_plus/package_info_plus.dart';
 
 class CustomerProfile extends StatefulWidget {
   const CustomerProfile({super.key});
@@ -88,7 +89,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
               ),
             ),
           ),
-                SizedBox(height: 20,)
+                    SizedBox(height: 20,)
               ],
             )
           ),
