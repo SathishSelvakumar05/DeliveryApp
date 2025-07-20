@@ -1,13 +1,14 @@
 import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:delivery_app/CommonCubit/network_cubit.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'CommonCubit/internet_cubit.dart';
+import 'CommonCubit/NetworkScreen/MainScreen.dart';
 import 'CustomerScreen/DeliveryScreen/Cubit/add_delivery_cubit.dart';
 import 'Firebase/PushNotification/PushNotification.dart';
 import 'LoginScreen/Cubit/add_user_cubit.dart';
@@ -102,13 +103,13 @@ void main() async{
       navigatorKey.currentState!.pushNamed("/message", arguments: message);
     });
   }
-  runApp(  MyApp(connectivity: Connectivity(),));
+  runApp( BlocProvider(create: (_)=>NetworkCubit(),child: MyApp(),));
 
 }
 
 class MyApp extends StatelessWidget {
-  final Connectivity? connectivity;
-  const MyApp({super.key,this.connectivity});
+  // final Connectivity? connectivity;
+  const MyApp({super.key,});
   @override
   Widget build(BuildContext context) {
     return  MultiBlocProvider(
@@ -119,10 +120,10 @@ class MyApp extends StatelessWidget {
         BlocProvider<DeliveryCubit>(
           create: (context) => DeliveryCubit(),
         ),
-        BlocProvider<InternetCubit>(
-          create: (context) =>
-              InternetCubit(connectivity: connectivity),
-        ),
+        // BlocProvider<InternetCubit>(
+        //   create: (context) =>
+        //       InternetCubit(connectivity: connectivity),
+        // ),
       ],
       child: ScreenUtilInit(
           minTextAdapt: true,
@@ -130,8 +131,17 @@ class MyApp extends StatelessWidget {
           designSize: const Size(412, 846),
           builder: (context, child) {
             return  MaterialApp(
-              debugShowCheckedModeBanner: false,
-              home: MyHomePage(),);
+                    // locale: context.locale,
+                    // supportedLocales: context.supportedLocales,
+                    // localizationsDelegates: context.localizationDelegates,
+                    // navigatorKey: navigatorsKey,
+                    // theme: theme,
+                    // routes: appRoutes,
+                    initialRoute: '/',
+                    debugShowCheckedModeBanner: false,
+               home: MainScreen(child: MyHomePage()));
+
+            // MyHomePage(),);
               // BlocBuilder<ThemeCubit, ThemeData>(
               //   builder: (context, theme) {
               //     return MaterialApp(

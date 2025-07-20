@@ -87,7 +87,7 @@ class PushNotifications {
     );
     final DarwinInitializationSettings initializationSettingsDarwin =
     DarwinInitializationSettings(
-      onDidReceiveLocalNotification: (id, title, body, payload) => null,
+      // onDidReceiveLocalNotification: (id, title, body, payload) => null,
     );
     final LinuxInitializationSettings initializationSettingsLinux =
     LinuxInitializationSettings(defaultActionName: 'Open notification');
@@ -232,7 +232,7 @@ class PushNotifications {
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       uiLocalNotificationDateInterpretation:
-      UILocalNotificationDateInterpretation.absoluteTime,
+       UILocalNotificationDateInterpretation.absoluteTime,
       payload: payload,
     );
   }
@@ -298,7 +298,7 @@ class PushNotifications {
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
+       uiLocalNotificationDateInterpretation:
       UILocalNotificationDateInterpretation.absoluteTime,
       payload: payload,
     );

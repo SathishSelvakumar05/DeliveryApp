@@ -6,9 +6,11 @@ import '../CustomerScreen/CustomerDashboard/CustomerDashboard.dart';
 import '../Firebase/LocalNotification/LocalNotification.dart';
 import '../GuruTasks/DistanceCalculator/WalkTrackerScreen.dart';
 import '../LanguageChanger/Tamil2English.dart';
+import '../Profile/profile_screen.dart';
 import '../ShareApp/PdfScreen.dart';
 import '../ShareInternet/ShareEmailScreen.dart';
 import '../SoundPlay/AudioPlayScreen.dart';
+import '../Twilio/TwilioScreen.dart';
 import 'RegisterScreen/AddRegister.dart';
 import 'RegisterScreen/FireBaseSignup.dart';
 import 'RegisterScreen/MobileNumberLogin.dart';
@@ -75,7 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
               title: 'Get Started with Customer',
               buttonColor: Color(0xFF0C1D37),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>WalkTrackerScreen() ,));
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>SettingsScreen() ,));
+                // Navigator.push(context, MaterialPageRoute(builder: (context) =>WalkTrackerScreen() ,));
                 // Navigator.push(context, MaterialPageRoute(builder: (context) =>DashboardScreen() ,));
                 // Navigator.push(context, MaterialPageRoute(builder: (context) =>FirebaeSignUpScreen() ,));
                  //Navigator.push(context, MaterialPageRoute(builder: (context) =>MobileLoginScreen(Role: "Customer",) ,));
@@ -88,8 +91,9 @@ class _MyHomePageState extends State<MyHomePage> {
               buttonColor:Color(0xFF0C1D37),
               onTap: () {
                // Navigator.push(context, MaterialPageRoute(builder: (context) =>LocalnotificationScreen() ,));
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>Twilioscreen() ,));
                 // Navigator.push(context, MaterialPageRoute(builder: (context) =>ShareEmailScreen() ,));
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>MobileLoginScreen(Role: "Delivery Agent",) ,));
+                // Navigator.push(context, MaterialPageRoute(builder: (context) =>MobileLoginScreen(Role: "Delivery Agent",) ,));
 
                 print('Delivery tapped');
               },

@@ -1,4 +1,3 @@
-import 'package:d_chart/commons/constants.dart';
 import 'package:delivery_app/CustomerScreen/UserListScreen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sidebarx/sidebarx.dart';
-import '../../CommonCubit/internet_cubit.dart';
 import '../../Components/Widgets/NoInternetScreen.dart';
 import '../CustomerProfileScreen/Presentation/CustomerProfile.dart';
 import '../DeliveryScreen/Presentation/AddDeliveryTabs.dart';
@@ -54,52 +52,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
 
   Widget build(BuildContext context) {
-    return BlocBuilder<InternetCubit, loading>(
-        builder: (context, InternetState) {
-          if (InternetState.checkInternet!) {
-            if (_bottomNavIndex == null) {
-              return Scaffold(
-                body: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            }
-            return Scaffold(
-              appBar: AppBar(
-                centerTitle: true,title: Text('data'),
-                actions: [],
-                leading: SizedBox(),
-              ),
-              key: _scaffoldKey,
-              backgroundColor: Color(0xfff5f5f5),
-              extendBody: true,
-              bottomNavigationBar: BottomAppBar(
-                height: 66.h,
-                color: Colors.white,
-                shape: const CircularNotchedRectangle(),
-                notchMargin: 10.r,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: List.generate(5, (index) => _buildNavItem(index)),
-                ),
-              ),
-              body: _bottomNavIndex == 0
-                  ? UserListScreen()
-                  : _bottomNavIndex == 1
-                  ? UserListScreen()
-                  : _bottomNavIndex == 2
-                  ? UserListScreen()
-                  : _bottomNavIndex == 3
-                  ? UserListScreen()
-                  : UserListScreen(),
-            );
-          } else {
-            return Scaffold(
+    return  Scaffold(
 
-              key: _scaffoldKey,
-              // floatingActionButtonLocation: ExpandableFab.location,
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              /* bottomNavigationBar: CurvedNavigationBar(
+        key: _scaffoldKey,
+        // floatingActionButtonLocation: ExpandableFab.location,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        /* bottomNavigationBar: CurvedNavigationBar(
                   index: _bottomNavIndex,
                   color: Theme.of(context).scaffoldBackgroundColor,
                   // buttonBackgroundColor: Constants.white,
@@ -113,7 +71,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     });
                   },
                 ),*/
-              extendBody: true,
+        extendBody: true,
 
 //                 floatingActionButton: _bottomNavIndex == 0
 //                     ? FloatingActionButton(backgroundColor: Colors.white,
@@ -123,30 +81,71 @@ class _DashboardScreenState extends State<DashboardScreen> {
 //                 )
 //                     : null,
 
-                // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-              bottomNavigationBar: BottomAppBar(
-                height: 66.h,
-                color: Colors.white,
-                shape: const CircularNotchedRectangle(),
-                notchMargin: 10.r,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: List.generate(3, (index) => _buildNavItem(index)),
-                ),
-              ),
-              body: _bottomNavIndex == 0
-                  ? AddDeliveryTabs()
-                  : _bottomNavIndex == 1
-                  ? CustomerDashboard()
-                  : _bottomNavIndex == 2
-                  ? CustomerProfile()
-                  :UserListScreen()
-            );
-            //   Scaffold(
-            //   body: NoInternetConnection(),
-            // );
-          }
-        });
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: BottomAppBar(
+          height: 66.h,
+          color: Colors.white,
+          shape: const CircularNotchedRectangle(),
+          notchMargin: 10.r,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: List.generate(3, (index) => _buildNavItem(index)),
+          ),
+        ),
+        body: _bottomNavIndex == 0
+            ? AddDeliveryTabs()
+            : _bottomNavIndex == 1
+            ? CustomerDashboard()
+            : _bottomNavIndex == 2
+            ? CustomerProfile()
+            :UserListScreen()
+    );
+      // BlocBuilder<InternetCubit, loading>(
+      //   builder: (context, InternetState) {
+      //     if (InternetState.checkInternet!) {
+      //       if (_bottomNavIndex == null) {
+      //         return Scaffold(
+      //           body: const Center(
+      //             child: CircularProgressIndicator(),
+      //           ),
+      //         );
+      //       }
+      //       return Scaffold(
+      //         appBar: AppBar(
+      //           centerTitle: true,title: Text('data'),
+      //           actions: [],
+      //           leading: SizedBox(),
+      //         ),
+      //         key: _scaffoldKey,
+      //         backgroundColor: Color(0xfff5f5f5),
+      //         extendBody: true,
+      //         bottomNavigationBar: BottomAppBar(
+      //           height: 66.h,
+      //           color: Colors.white,
+      //           shape: const CircularNotchedRectangle(),
+      //           notchMargin: 10.r,
+      //           child: Row(
+      //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //             children: List.generate(5, (index) => _buildNavItem(index)),
+      //           ),
+      //         ),
+      //         body: _bottomNavIndex == 0
+      //             ? UserListScreen()
+      //             : _bottomNavIndex == 1
+      //             ? UserListScreen()
+      //             : _bottomNavIndex == 2
+      //             ? UserListScreen()
+      //             : _bottomNavIndex == 3
+      //             ? UserListScreen()
+      //             : UserListScreen(),
+      //       );
+      //     } else {
+      //       return
+      //       //   Scaffold(
+      //       //   body: NoInternetConnection(),
+      //       // );
+      //     }
+      //   });
   }
 
   Widget _buildNavItem(int index) {
