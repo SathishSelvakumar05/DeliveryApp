@@ -1,11 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Components/CommonFunctions.dart';
+import '../Components/CustomToast/CustomToast.dart';
 import '../CustomerScreen/CustomerDashboard/CustomerDashboard.dart';
 import '../Firebase/LocalNotification/LocalNotification.dart';
 import '../GuruTasks/DistanceCalculator/WalkTrackerScreen.dart';
 import '../LanguageChanger/Tamil2English.dart';
+import '../PhotoShop/FireStores/FireBaseStores.dart';
+import '../PhotoShop/FirebaseLogin/FirebaseAuth.dart';
+import '../PhotoShop/Model/UserListModel.dart';
 import '../Profile/profile_screen.dart';
 import '../ShareApp/PdfScreen.dart';
 import '../ShareInternet/ShareEmailScreen.dart';
@@ -21,6 +30,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool _isSigningIn=false;
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -63,10 +73,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
             ),
 
-            const Text(
-              'Delivery App',
+            _isSigningIn?Center(child: CircularProgressIndicator(),): Text(
+              'VFX Advertisement',
               style: TextStyle(
-                fontSize: 32,
+                fontSize: 32.sp,
                 fontWeight: FontWeight.w700,
                 color: Color(0xFF0C1D37),
               ),
@@ -77,7 +87,8 @@ class _MyHomePageState extends State<MyHomePage> {
               title: 'Get Started with Customer',
               buttonColor: Color(0xFF0C1D37),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>SettingsScreen() ,));
+                _isSigningIn?null: loginFunction();
+                //Navigator.push(context, MaterialPageRoute(builder: (context) =>SettingsScreen() ,));
                 // Navigator.push(context, MaterialPageRoute(builder: (context) =>WalkTrackerScreen() ,));
                 // Navigator.push(context, MaterialPageRoute(builder: (context) =>DashboardScreen() ,));
                 // Navigator.push(context, MaterialPageRoute(builder: (context) =>FirebaeSignUpScreen() ,));
@@ -153,6 +164,67 @@ Navigator.push(context, MaterialPageRoute(builder: (context) => EmailPDFScreen()
       ),
     );
   }
+  Future<void> loginFunction() async {
+    final SharedPreferences localDb = await SharedPreferences.getInstance();
+    // var connectivityResult = await Connectivity().checkConnectivity();
+    // if (connectivityResult.first == ConnectivityResult.none) {
+    //   Fluttertoast.showToast(msg: "No internet connection");
+    //   return;
+    // }
+    setState(() {
+      _isSigningIn = true;
+    });
+    try{
+      setState(() {
+        _isSigningIn = true;
+      });
+      UserCredential? user = await FirebaseAuthentication().signInWithGoogle();
+      print("");
+      final token = await FirebaseMessaging.instance.getToken();
+      await FirebaseFireStore().insertUser(
+          UserListModel(
+            name: user!.user!.displayName!,
+            email: user.user!.email!,
+            imageUrl: user.user!.photoURL!,
+            createdAt: Timestamp.now(),
+            role: "user",
+            firebaseUid: user.user!.uid!,
+            status: "online",
+            lastSeen: Timestamp.now(),
+            firebaseToken: token.toString(),
+          ),
+          user.user!.uid);
+      showSuccessToast(
+          "${capitalizeFirstLetter(user.user!.displayName!)} is Successfully Login");
+      localDb.setString(
+        "username",
+        user.user!.displayName!,
+      );
+      localDb.setString(
+        "uuid",
+        user.user!.uid,
+      );
+      if(user!=null){
+        await Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => DashboardScreen(),),
+              (route) => false,
+        );
+      }else{
+
+print("okkk");
+      }
+
+
+    }catch(e){}
+    finally{
+      setState(() {
+        _isSigningIn = false;
+      });
+    }
+
+      }
+
 }
 
 

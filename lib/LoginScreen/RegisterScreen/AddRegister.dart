@@ -10,7 +10,7 @@ import '../../Components/Button/CustomButton.dart';
 import '../../Components/Textfield/CustomMobileNumber.dart';
 import '../../Components/Textfield/CustomTextField.dart';
 import '../../CustomerScreen/CustomerDashboard/CustomerDashboard.dart';
-import '../../CustomerScreen/UserListScreen.dart';
+import '../../CustomerScreen/customer_share_screen.dart';
 import 'MobileNumberLogin.dart';
 
 class AddUserScreen extends StatefulWidget {

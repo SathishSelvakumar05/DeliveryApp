@@ -7,13 +7,17 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'AutoLogin.dart';
 import 'CommonCubit/NetworkScreen/MainScreen.dart';
 import 'CustomerScreen/DeliveryScreen/Cubit/add_delivery_cubit.dart';
 import 'Firebase/PushNotification/PushNotification.dart';
 import 'LoginScreen/Cubit/add_user_cubit.dart';
 import 'LoginScreen/LoginForm.dart';
+import 'Twilio/Cubit/twilio_cubit.dart';
 import 'firebase_options.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 final navigatorKey = GlobalKey<NavigatorState>();
 
 // function to listen to background changes
@@ -51,6 +55,11 @@ void showNotification({required String title, required String body}) {
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
+  await Supabase.initialize(
+    url: dotenv.env["SUPABASE_URL"]!,
+    anonKey: dotenv.env["SUPABASE_ANON_KEY"]!,
+  );
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -120,6 +129,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<DeliveryCubit>(
           create: (context) => DeliveryCubit(),
         ),
+        BlocProvider<TwilioCubit>(create: (context)=>TwilioCubit(),),
         // BlocProvider<InternetCubit>(
         //   create: (context) =>
         //       InternetCubit(connectivity: connectivity),
@@ -139,7 +149,7 @@ class MyApp extends StatelessWidget {
                     // routes: appRoutes,
                     initialRoute: '/',
                     debugShowCheckedModeBanner: false,
-               home: MainScreen(child: MyHomePage()));
+               home: MainScreen(child: AuoLoginScreen()));
 
             // MyHomePage(),);
               // BlocBuilder<ThemeCubit, ThemeData>(
@@ -158,6 +168,7 @@ class MyApp extends StatelessWidget {
           }),
     );
   }
+
 }
 
 
