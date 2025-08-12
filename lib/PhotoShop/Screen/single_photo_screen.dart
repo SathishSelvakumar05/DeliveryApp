@@ -26,6 +26,9 @@ class _SinglePhotoScreenState extends State<SinglePhotoScreen> {
 
   Future<void> _fetchPhotos() async {
     final response = await supabase.from('photos').select();
+    print("the response");
+    print("${response.runtimeType}");
+    print("${response.toString()}");
     setState(() {
       _photos = response;
       _loading = false;
@@ -49,7 +52,7 @@ class _SinglePhotoScreenState extends State<SinglePhotoScreen> {
             child: InkWell(
               borderRadius: BorderRadius.circular(30).r,
               onTap: () {
-Navigator.push(context, MaterialPageRoute(builder: (context) => UploadMultiImage(),));             },
+                     Navigator.push(context, MaterialPageRoute(builder: (context) => UploadMultiImage(),));             },
               child: CircleAvatar(
                 radius: 20.sp,
                 backgroundColor: Colors.pink.shade400,

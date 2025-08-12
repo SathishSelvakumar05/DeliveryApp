@@ -1,11 +1,48 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../PhotoShop/Screen/single_photo_screen.dart';
+import '../../main.dart';
 
-class TryDashboard extends StatelessWidget {
-  const TryDashboard({super.key});
+class TryDashboard extends StatefulWidget {
+  TryDashboard({super.key});
+
+  @override
+  State<TryDashboard> createState() => _TryDashboardState();
+}
+
+class _TryDashboardState extends State<TryDashboard> {
+  String userName = '';
+  String photoUrl = '';
+  final supabase = Supabase.instance.client;
+  List<dynamic> _photos = [];
+  bool _loading = true;
+
+  Future<void> _fetchPhotos() async {
+    final response = await supabase.from('photos').select();
+    print("the response");
+    print("${response.runtimeType}");
+    print("${response.toString()}");
+    setState(() {
+      _photos = response;
+      _loading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    userName = auth.currentUser?.displayName ?? "";
+    photoUrl = auth.currentUser?.photoURL ?? "";
+    print("skkkkkkkkk");
+    print("${userName}");
+    print("${photoUrl}");
+    _fetchPhotos();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,22 +57,25 @@ class TryDashboard extends StatelessWidget {
               // Location & Profile Row
               Row(
                 children: [
-                  Icon(Iconsax.location5, color: Colors.grey[600]),
-                  const SizedBox(width: 6),
-                  const Text(
-                    "New York, USA",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
-                  const Spacer(),
                   Container(
                     height: 40,
                     width: 40,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(12),
+                      shape: BoxShape.circle,
+                      color: Colors.blue, // background color
                     ),
-                    child: const Icon(Iconsax.user, color: Colors.black54),
-                  )
+                    child: ClipOval(
+                      child: Image.network(
+                        photoUrl,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  Text(
+                    "${userName}",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
                 ],
               ),
               const SizedBox(height: 16),
@@ -60,7 +100,7 @@ class TryDashboard extends StatelessWidget {
               // Upcoming Schedule
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children:  [
+                children: [
                   Text("Trending Offers",
                       style: TextStyle(
                           fontSize: 17.sp, fontWeight: FontWeight.bold)),
@@ -71,7 +111,7 @@ class TryDashboard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color:Color(0xFF0C1D37),
+                  color: Color(0xFF0C1D37),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Row(
@@ -114,8 +154,7 @@ class TryDashboard extends StatelessWidget {
 
               // Doctor Speciality
               const Text("Doctor Speciality",
-                  style: TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
               SizedBox(
                 height: 80,
@@ -134,26 +173,91 @@ class TryDashboard extends StatelessWidget {
               // Nearby Hospitals
               Row(
                 children: [
-                   Text("Wedding Collections",
+                  Text("Wedding Collections",
                       style: TextStyle(
                           fontSize: 15.sp, fontWeight: FontWeight.bold)),
                   Spacer(),
-                  TextButton(onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => SinglePhotoScreen(),));
-                  }, child: Text("View more",style: TextStyle(fontWeight: FontWeight.w500,fontSize: 15.sp,color: Color(0xFF0C1D37)),))
+                  TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SinglePhotoScreen(),
+                            ));
+                      },
+                      child: Text(
+                        "View more",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15.sp,
+                            color: Color(0xFF0C1D37)),
+                      ))
                 ],
               ),
               const SizedBox(height: 10),
-              SizedBox(
-                height: 120,
-                child: ListView(
+              _photos.isEmpty
+                  ? SizedBox(
+                      height: 100.h,
+                      child: Center(child: Text("No Images")),
+                    )
+                  : SizedBox(
+                      height: 110.h,
+                      child: ListView.builder(
+                        itemCount: _photos.length,
+                        itemBuilder: (context, index) {
+                          final price = _photos[index]['price'] ?? "";
+                          final imageUrl = _photos[index]['image1'] ?? "";
+                          final desc = _photos[index]['description'] ?? "";
+                          return hospitalCard(price: price, imageUrl: imageUrl,description: desc);
+                        },
+                        scrollDirection: Axis.horizontal,
+                      ),
+                    ),
+
+              const SizedBox(height: 10),
+
+
+              // Nearby Hospitals
+              Row(
+                children: [
+                  Text("Kids Collections",
+                      style: TextStyle(
+                          fontSize: 15.sp, fontWeight: FontWeight.bold)),
+                  Spacer(),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SinglePhotoScreen(),
+                            ));
+                      },
+                      child: Text(
+                        "View more",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15.sp,
+                            color: Color(0xFF0C1D37)),
+                      ))
+                ],
+              ),
+              const SizedBox(height: 10),
+              _photos.isEmpty
+                  ? SizedBox(
+                height: 100.h,
+                child: Center(child: Text("No Images")),
+              )
+                  : SizedBox(
+                height: 110.h,
+                child: ListView.builder(
+                  itemCount: _photos.length,
+                  itemBuilder: (context, index) {
+                    final price = _photos[index]['price'] ?? "";
+                    final imageUrl = _photos[index]['image1'] ?? "";
+                    final desc = _photos[index]['description'] ?? "";
+                    return hospitalCard(price: price, imageUrl: imageUrl,description: desc);
+                  },
                   scrollDirection: Axis.horizontal,
-                  children: [
-                    hospitalCard("Excellent",
-                        "https://picsum.photos/200/300?1"),
-                    hospitalCard("Trending",
-                        "https://picsum.photos/200/300?2"),
-                  ],
                 ),
               ),
             ],
@@ -184,37 +288,86 @@ class TryDashboard extends StatelessWidget {
     );
   }
 
-  Widget hospitalCard(String name, String imageUrl) {
-    return Container(
-      margin: const EdgeInsets.only(right: 12),
-      width: 160,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-              color: Colors.grey.shade200,
-              blurRadius: 5,
-              spreadRadius: 2)
-        ],
-      ),
-      child: Column(
-        children: [
-          ClipRRect(
-            borderRadius:
-            const BorderRadius.vertical(top: Radius.circular(16)),
-            child: Image.network(
-              imageUrl,
-              height: 80,
-              width: double.infinity,
-              fit: BoxFit.cover,
+  Widget hospitalCard({required String price,required String imageUrl,required String description}) {
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Container(
+        margin: EdgeInsets.only(right: 6),
+        width: 140.w,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12).r,
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.15),
+              blurRadius: 6,
+              spreadRadius: 1,
+              offset: Offset(0, 2),
             ),
-          ),
-          const SizedBox(height: 6),
-          Text(name,
-              style:
-              const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-        ],
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image
+            ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(12)).r,
+              child: Image.network(
+                imageUrl,
+                height: 60.h,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            ),
+
+            // Price row with currency icon
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              child: Row(
+                children: [
+                  Icon(Icons.attach_money, size: 12.sp, color: Colors.green),
+                  SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      price,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 10.sp,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Description row with info icon
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.info_outline, size: 10.sp, color: Colors.blueGrey),
+                  SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      "${description}",
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 8.sp,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+          ],
+        ),
       ),
     );
   }

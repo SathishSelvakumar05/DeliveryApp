@@ -7,10 +7,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../Components/CustomToast/CustomToast.dart';
+import '../../Components/Textfield/CustomTextField.dart';
 import '../../Utils/Constants/ColorConstants.dart';
 import '../../Utils/Constants/TextStyles.dart';
 import '../Widgets/PickerComponent.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
+
 
 
 class UploadMultiImage extends StatefulWidget {
@@ -39,14 +44,13 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
   // }
 
   Future<void> _uploadData() async {
-    if (_selectedImages.isEmpty ||
-        _priceController.text.trim().isEmpty ||
-        _descController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please select images, enter price & description")),
-      );
-      return;
-    }
+    if (_selectedImages.isNotEmpty ||_formKey.currentState!.saveAndValidate() ?? false) {
+      final formData = _formKey.currentState!.value;
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(content: Text("Please select images, enter price & description")),
+    //   );
+    //   return;
+    // }
 
     setState(() => _loading = true);
 
@@ -61,7 +65,7 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
         final fileBytes = await _selectedImages[i].readAsBytes();
         await supabase.storage
             .from(bucketName)
-            .uploadBinary(fileName, fileBytes, fileOptions: const FileOptions(upsert: false));
+            .uploadBinary(fileName, fileBytes, fileOptions: const FileOptions(upsert: false,));
 
         // Get public URL
         final publicUrl = supabase.storage.from(bucketName).getPublicUrl(fileName);
@@ -70,8 +74,8 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
 
       // Insert into Supabase table
       await supabase.from('photos').insert({
-        'price': _priceController.text.trim(),
-        'description': _descController.text.trim(),
+        'price':  formData['price'],
+        'description':formData['description'],
         'image1': imageUrls[0],
         'image2': imageUrls[1],
         'image3': imageUrls[2],
@@ -97,8 +101,10 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
       );
     } finally {
       setState(() => _loading = false);
-    }
+    }}
   }
+  final _formKey = GlobalKey<FormBuilderState>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -108,165 +114,185 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
       appBar: AppBar(title:  Text("Upload Multiple Images",style: TextStyle(fontSize: 14.sp,fontWeight: FontWeight.bold,),),backgroundColor:Color(0xFFF5F7FA),centerTitle: true,),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            _selectedImages.isEmpty? dottedContainer(context,"only 3 images are allowed")
-                :
-            Container(
-          height: 120.h,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(5).r,
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 7.8,
-                      offset: Offset(-3.6, 5.0))
-                ],
-              ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10).r,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        child: FormBuilder(
+          key: _formKey,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    pickImage(context);
-                  },
-                  child: DottedBorder(
-                    color: Colors.grey,
-                    strokeWidth: 2,
-                    dashPattern: [6, 6],
-                    borderType: BorderType.RRect,
-                    radius: Radius.circular(10).r,
-                    child: Container(
-                      height: 60.h,
-                      width: 60.w,
-                      alignment: Alignment.center,
-                      child: Icon(Icons.add,
-                          color: Theme.of(context).dividerColor, size: 50.sp),
+                _selectedImages.isEmpty? dottedContainer(context,"only 3 images are allowed")
+                    :
+                Container(
+              height: 120.h,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(5).r,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 7.8,
+                          offset: Offset(-3.6, 5.0))
+                    ],
+                  ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10).r,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        pickImage(context);
+                      },
+                      child: DottedBorder(
+                        color: Colors.grey,
+                        strokeWidth: 2,
+                        dashPattern: [6, 6],
+                        borderType: BorderType.RRect,
+                        radius: Radius.circular(10).r,
+                        child: Container(
+                          height: 60.h,
+                          width: 60.w,
+                          alignment: Alignment.center,
+                          child: Icon(Icons.add,
+                              color: Theme.of(context).dividerColor, size: 50.sp),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                SizedBox(width: 10.w),
-                Expanded(
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) =>
-                        SizedBox(width: 15.w),
-                    scrollDirection: Axis.horizontal,
-                    itemCount:_selectedImages.length,
-                    itemBuilder: (context, index) {
-                      bool isLocalImage = true;
-                      String fileExtension = _selectedImages[index].path.split('.').last??"";
-                      String fileTitle =
-                          "Image ${index + 1}.${fileExtension}";
-                      return Column(
-                        key: ValueKey(isLocalImage
-                            ? _selectedImages[index].path
-                            : ""),
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.r),
-                              border:
-                              Border.all(color: Colors.grey, width: 0.50),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10.r),
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Image.file(
-                                    _selectedImages[index],
-                                    width: 60.w,
-                                    height: 60.h,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Positioned(
-                                    top: 5,
-                                    right: 5,
-                                    child: CircleAvatar(
-                                      radius: 10.r,
-                                      backgroundColor: KConstantColors.white,
-                                      child: IconButton(
-                                        icon: Icon(Icons.delete,
-                                            color: KConstantColors.red,
-                                            size: 11.sp),
-                                        onPressed: () {
-                                            removeImage(index);
+                    SizedBox(width: 10.w),
+                    Expanded(
+                      child: ListView.separated(
+                        separatorBuilder: (context, index) =>
+                            SizedBox(width: 15.w),
+                        scrollDirection: Axis.horizontal,
+                        itemCount:_selectedImages.length,
+                        itemBuilder: (context, index) {
+                          bool isLocalImage = true;
+                          String fileExtension = _selectedImages[index].path.split('.').last??"";
+                          String fileTitle =
+                              "Image ${index + 1}.${fileExtension}";
+                          return Column(
+                            key: ValueKey(isLocalImage
+                                ? _selectedImages[index].path
+                                : ""),
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  border:
+                                  Border.all(color: Colors.grey, width: 0.50),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Image.file(
+                                        _selectedImages[index],
+                                        width: 60.w,
+                                        height: 60.h,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      Positioned(
+                                        top: 5,
+                                        right: 5,
+                                        child: CircleAvatar(
+                                          radius: 10.r,
+                                          backgroundColor: KConstantColors.white,
+                                          child: IconButton(
+                                            icon: Icon(Icons.delete,
+                                                color: KConstantColors.red,
+                                                size: 11.sp),
+                                            onPressed: () {
+                                                removeImage(index);
 
-                                        },
-                                        padding: EdgeInsets.zero,
-                                        constraints: BoxConstraints(),
+                                            },
+                                            padding: EdgeInsets.zero,
+                                            constraints: BoxConstraints(),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 5,
-                                    right: 5,
-                                    child: CircleAvatar(
-                                      radius: 10.r,
-                                      backgroundColor: Colors.white,
-                                      child: IconButton(
-                                        icon: Icon(Icons.fullscreen,
-                                            color: Colors.blue, size: 12.sp),
-                                        onPressed: () => {
-                                        },
-                                        padding: EdgeInsets.zero,
-                                        constraints: BoxConstraints(),
+                                      Positioned(
+                                        bottom: 5,
+                                        right: 5,
+                                        child: CircleAvatar(
+                                          radius: 10.r,
+                                          backgroundColor: Colors.white,
+                                          child: IconButton(
+                                            icon: Icon(Icons.fullscreen,
+                                                color: Colors.blue, size: 12.sp),
+                                            onPressed: () => {
+                                            },
+                                            padding: EdgeInsets.zero,
+                                            constraints: BoxConstraints(),
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
-                          SizedBox(height: 2.h),
-                          Text(
-                            fileTitle,
-                            style: TextStyle(fontSize: 8.sp),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      );
-                    },
-                  ),
+                              SizedBox(height: 2.h),
+                              Text(
+                                fileTitle,
+                                style: TextStyle(fontSize: 8.sp),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
+              ),
+            ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _priceController,
+                  decoration: const InputDecoration(labelText: "Price"),
+                  keyboardType: TextInputType.number,
+                ),
+                TextField(
+                  controller: _descController,
+                  decoration: const InputDecoration(labelText: "Description"),
+                ),
+                CustomTextField(
+                  icon: Icons.location_on,
+                  name: 'price',
+                  labelName: 'Price',
+                  placeHolder: 'Enter Price ',
+                  validators: [FormBuilderValidators.required()],
+                ),
+                CustomTextField(
+                  icon: Icons.flag,
+                  name: 'description',
+                  labelName: 'Description',
+                  placeHolder: 'Enter Description ',
+                  validators: [FormBuilderValidators.required()],
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _loading ? null : _uploadData,
+                  child: _loading ? const CircularProgressIndicator() : const Text("Upload"),
+                ),
+
+                TextButton(onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => GetAllPhotos(),));
+                }, child: Text("Show All")),
+                SizedBox(height: 30,),
+                ElevatedButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const SinglePhotoScreen()),
+                  ),
+                  child: const Text("View Uploaded Photos"),
+                )
               ],
             ),
           ),
-        ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _priceController,
-              decoration: const InputDecoration(labelText: "Price"),
-              keyboardType: TextInputType.number,
-            ),
-            TextField(
-              controller: _descController,
-              decoration: const InputDecoration(labelText: "Description"),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _loading ? null : _uploadData,
-              child: _loading ? const CircularProgressIndicator() : const Text("Upload"),
-            ),
-            
-            TextButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => GetAllPhotos(),));
-            }, child: Text("Show All")),
-            SizedBox(height: 30,),
-            ElevatedButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const SinglePhotoScreen()),
-              ),
-              child: const Text("View Uploaded Photos"),
-            )
-          ],
         ),
       ),
     );
@@ -302,7 +328,7 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
       showErrorToast('You Can Select Only $maxImages Images.');
       return;
     }
-    final ImageSource? source = await showImageSourceDialog(context);
+    final ImageSource? source = await showImageSourceDialog(context,);
     if (source == null) return;
 
     if (source == ImageSource.camera) {

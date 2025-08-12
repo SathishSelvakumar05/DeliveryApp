@@ -93,6 +93,11 @@ dependencies:
   supabase_flutter: ^2.9.1
   flutter_dotenv: ^5.2.1
   dotted_border: ^2.1.0
+  local_auth: ^2.3.0
+  dialog_flowtter:
+#  tflite_flutter: ^0.9.0
+#  image: ^4.3.0
+
 
 #  google_mlkit_translation: ^0.8.0
 
@@ -127,6 +132,8 @@ flutter:
   assets:
      - assets/images/
      - .env
+     - assets/dialog_flow_auth.json
+     - assets/1.tflite
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

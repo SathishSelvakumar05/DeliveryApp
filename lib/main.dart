@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:delivery_app/CommonCubit/network_cubit.dart';
+import 'package:dialog_flowtter/dialog_flowtter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -16,9 +18,15 @@ import 'Firebase/PushNotification/PushNotification.dart';
 import 'LoginScreen/Cubit/add_user_cubit.dart';
 import 'LoginScreen/LoginForm.dart';
 import 'Twilio/Cubit/twilio_cubit.dart';
+import 'Twilio/DiseasDetectionAI/AIDetection Screen.dart';
+import 'Twilio/OpenAI.dart';
+import 'Twilio/chat_dialog_flow/MainChatScreen.dart';
 import 'firebase_options.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 final navigatorKey = GlobalKey<NavigatorState>();
+final FirebaseAuth auth = FirebaseAuth.instance;
+late DialogFlowtter dialogFlowtter;
+
 
 // function to listen to background changes
 @pragma('vm:entry-point')
@@ -149,7 +157,12 @@ class MyApp extends StatelessWidget {
                     // routes: appRoutes,
                     initialRoute: '/',
                     debugShowCheckedModeBanner: false,
-               home: MainScreen(child: AuoLoginScreen()));
+               home: MainScreen(child:
+               //GenerateAIData()
+                 AuoLoginScreen()
+              // OpenAIScreen()
+               //DialogFlowChat()
+               ));
 
             // MyHomePage(),);
               // BlocBuilder<ThemeCubit, ThemeData>(
