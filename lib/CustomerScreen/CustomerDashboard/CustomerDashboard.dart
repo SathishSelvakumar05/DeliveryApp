@@ -1,9 +1,11 @@
 import 'package:delivery_app/CustomerScreen/customer_share_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,7 +17,6 @@ import '../CustomerProfileScreen/Presentation/CustomerProfile.dart';
 import '../DeliveryScreen/Presentation/AddDeliveryTabs.dart';
 import '../DeliveryScreen/Presentation/DeliveryScreen.dart';
 import 'CustomerDashboardScreen.dart';
-
 class DashboardScreen extends StatefulWidget {
   static const routeName = "/DashBoard";
 
@@ -24,9 +25,9 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int? _bottomNavIndex;
-
 
   @override
   void initState() {
@@ -35,6 +36,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // _initializeBottomNavIndex();
     //getInitialData();
     super.initState();
+
   }
 
   // static Future<bool> requestNotificationPermission() async {
