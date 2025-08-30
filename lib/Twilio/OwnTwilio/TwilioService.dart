@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class TwilioService {
-  final String accountSid = "AC6b8d7796a52621329db5596cba67f898";     // Replace
-  final String authToken = "00033c5569262b1159eb036a5386c5b2";       // Replace
-  final String twilioNumber = "+1 343 800 1026"; // Replace (must be Twilio number)
+  final String accountSid = dotenv.env["Twilio_SSID"]!;     // Replace
+  final String authToken =  dotenv.env["Twilio_Token"]!;       // Replace
+  final String twilioNumber =  dotenv.env["Twilio_fromCall_Number"]!; // Replace (must be Twilio number)
 
   final Dio _dio = Dio();
 

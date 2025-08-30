@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 import 'chat_dialog_flow/MainChatScreen.dart';
@@ -38,7 +39,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final _controller = TextEditingController();
   final List<Message> _messages = [];
   bool _isLoading = false;
-  static const openAIKey = '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';
+  final  openAIKey = dotenv.env["OPENAI_SECRETKEY"]!;
 
   Future<void> sendMessage(String prompt) async {
 
