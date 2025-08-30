@@ -33,40 +33,9 @@ class _MyTwilioScreenState extends State<MyTwilioScreen> {
   @override
   void initState() {
     super.initState();
-    // twilioFlutter = TwilioFlutter(
-    //   accountSid: "AC6b8d7796a52621329db5596cba67f898", // Replace
-    //   authToken: "00033c5569262b1159eb036a5386c5b2",   // Replace
-    //   twilioNumber: "+919585394516", // Replace
-    // );
+
   }
-  //
-  // Future<void> sendSMS() async {
-  //   var response = await twilioFlutter.sendSMS(
-  //     toNumber: numberController.text,
-  //     messageBody: messageController.text,
-  //   );
-  //   print("SMS Status: ${response.toString()}");
-  // }
-  //
-  // Future<void> makeCall() async {
-  //   final msg = messageController.text;
-  //
-  //   // Build TwiML with selected language
-  //   final twiml =
-  //       "<Response><Say voice='alice' language='$selectedLanguage'>$msg</Say></Response>";
-  //
-  //   var response = await twilioFlutter.sendWhatsApp(
-  //     toNumber: numberController.text,
-  //     messageBody: "your_twilio_number",
-  //     // twiml: twiml,
-  //   );
-  //   var response = await twilioFlutter.makeCall(
-  //     toNumber: numberController.text,
-  //     fromNumber: "your_twilio_number",
-  //     twiml: twiml,
-  //   );
-  //   print("Call initiated: $response");
-  // }
+
 
 
   Future<void> sendSMS() async {
