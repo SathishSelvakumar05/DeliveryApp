@@ -145,14 +145,16 @@ class PushNotifications {
     required String body,
     required String payload,
   }) async {
-    const AndroidNotificationDetails androidNotificationDetails =
+    final sk="SK";
+    final AndroidNotificationDetails androidNotificationDetails =
     AndroidNotificationDetails('your channel id', 'your channel name',
         channelDescription: 'your channel description',
         importance: Importance.max,
         priority: Priority.high,
-        sound: RawResourceAndroidNotificationSound('custom_sound'), // <-- Custom sound
+        subText: "$sk",
+        sound: const RawResourceAndroidNotificationSound('custom_sound'), // <-- Custom sound
         ticker: 'ticker');
-    const NotificationDetails notificationDetails =
+     NotificationDetails notificationDetails =
     NotificationDetails(android: androidNotificationDetails);
     await _flutterLocalNotificationsPlugin
         .show(0, title, body, notificationDetails, payload: payload);

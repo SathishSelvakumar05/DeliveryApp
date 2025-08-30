@@ -1,3 +1,4 @@
+import 'package:delivery_app/RBAC/cubit/permission_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../network_cubit.dart';
@@ -16,6 +17,8 @@ class MainScreen extends StatelessWidget {
         if (!isConnected) {
           return const NetworkErrorScreen();
         } else {
+          context.read<PermissionCubit>().loadPermissions();
+
           return child;
         }
       },

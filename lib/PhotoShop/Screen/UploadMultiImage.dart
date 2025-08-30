@@ -6,10 +6,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../Components/Button/CustomButton.dart';
 import '../../Components/CustomToast/CustomToast.dart';
+import '../../Components/Textfield/CustomDescriptionField.dart';
+import '../../Components/Textfield/CustomDropdown.dart';
 import '../../Components/Textfield/CustomTextField.dart';
+import '../../CustomerScreen/CustomerDashboard/CustomerDashboardScreen.dart';
 import '../../Utils/Constants/ColorConstants.dart';
 import '../../Utils/Constants/TextStyles.dart';
+import '../Widgets/CustomSwticher.dart';
 import '../Widgets/PickerComponent.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -26,90 +31,124 @@ class UploadMultiImage extends StatefulWidget {
 }
 
 class _UploadMultiImageState extends State<UploadMultiImage> {
-  final _priceController = TextEditingController();
-  final _descController = TextEditingController();
+  final _formKey = GlobalKey<FormBuilderState>();
   List<File> _selectedImages = [];
   bool _loading = false;
+  bool isOfferSelected = false;
 
   final picker = ImagePicker();
   final supabase = Supabase.instance.client;
 
-  // Future<void> _pickImages() async {
-  //   final pickedFiles = await picker.pickMultiImage();
-  //   if (pickedFiles.isNotEmpty) {
-  //     setState(() {
-  //       _selectedImages = pickedFiles.map((e) => File(e.path)).toList();
-  //     });
+
+
+  // Future<void> _uploadData() async {
+  //   if(_selectedImages.isEmpty){
+  //     showErrorToast("please upload the image");
   //   }
+  //   if (_selectedImages.isNotEmpty &&_formKey.currentState!.saveAndValidate() ?? false) {
+  //     final formData = _formKey.currentState!.value;
+  //   //   ScaffoldMessenger.of(context).showSnackBar(
+  //   //     const SnackBar(content: Text("Please select images, enter price & description")),
+  //   //   );
+  //   //   return;
+  //   // }
+  //
+  //   setState(() => _loading = true);
+  //
+  //   try {
+  //     const bucketName = 'supabase-bucket';
+  //     List<String?> imageUrls = [null, null, null];
+  //
+  //     for (int i = 0; i < _selectedImages.length && i < 3; i++) {
+  //       final fileName = '${DateTime.now().millisecondsSinceEpoch}_$i.jpg';
+  //
+  //       // Upload file
+  //       final fileBytes = await _selectedImages[i].readAsBytes();
+  //       await supabase.storage
+  //           .from(bucketName)
+  //           .uploadBinary(fileName, fileBytes, fileOptions: const FileOptions(upsert: false,));
+  //
+  //       // Get public URL
+  //       final publicUrl = supabase.storage.from(bucketName).getPublicUrl(fileName);
+  //       imageUrls[i] = publicUrl;
+  //     }
+  //
+  //     // Insert into Supabase table
+  //     await supabase.from('photos').insert({
+  //       'price':  formData['price'].toString(),
+  //       'description':formData['description'].toString(),
+  //       'image1': imageUrls[0],
+  //       'image2': imageUrls[1],
+  //       'image3': imageUrls[2],
+  //     });
+  //
+  //   showSuccessToast("Uploaded Successfully");
+  //
+  //     _priceController.clear();
+  //     _descController.clear();
+  //     setState(() => _selectedImages = []);
+  //
+  //   } on StorageException catch (e) {
+  //     showErrorToast("Storage Error: ${e.message}");
+  //     debugPrint("Supabase storage error: ${e.message}");
+  //     // ScaffoldMessenger.of(context).showSnackBar(
+  //     //   SnackBar(content: Text("")),
+  //     // );
+  //   } catch (e) {
+  //     showErrorToast("Unexpected error: $e");
+  //     debugPrint("Unexpected error: $e");
+  //     // ScaffoldMessenger.of(context).showSnackBar(
+  //     //   SnackBar(content: Text("Error: $e")),
+  //     // );
+  //   } finally {
+  //     setState(() => _loading = false);
+  //   }}
+  //
   // }
 
-  Future<void> _uploadData() async {
-    if (_selectedImages.isNotEmpty ||_formKey.currentState!.saveAndValidate() ?? false) {
-      final formData = _formKey.currentState!.value;
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(content: Text("Please select images, enter price & description")),
-    //   );
-    //   return;
-    // }
-
-    setState(() => _loading = true);
-
-    try {
-      const bucketName = 'supabase-bucket';
-      List<String?> imageUrls = [null, null, null];
-
-      for (int i = 0; i < _selectedImages.length && i < 3; i++) {
-        final fileName = '${DateTime.now().millisecondsSinceEpoch}_$i.jpg';
-
-        // Upload file
-        final fileBytes = await _selectedImages[i].readAsBytes();
-        await supabase.storage
-            .from(bucketName)
-            .uploadBinary(fileName, fileBytes, fileOptions: const FileOptions(upsert: false,));
-
-        // Get public URL
-        final publicUrl = supabase.storage.from(bucketName).getPublicUrl(fileName);
-        imageUrls[i] = publicUrl;
-      }
-
-      // Insert into Supabase table
-      await supabase.from('photos').insert({
-        'price':  formData['price'],
-        'description':formData['description'],
-        'image1': imageUrls[0],
-        'image2': imageUrls[1],
-        'image3': imageUrls[2],
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Uploaded Successfully")),
-      );
-
-      _priceController.clear();
-      _descController.clear();
-      setState(() => _selectedImages = []);
-
-    } on StorageException catch (e) {
-      debugPrint("Supabase storage error: ${e.message}");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Storage Error: ${e.message}")),
-      );
-    } catch (e) {
-      debugPrint("Unexpected error: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $e")),
-      );
-    } finally {
-      setState(() => _loading = false);
-    }}
-  }
-  final _formKey = GlobalKey<FormBuilderState>();
-
-
+  final GlobalKey _dropdownKey = GlobalKey();
+  String? selectedItems ;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: const Color(0xFFf8f5f1),
+      bottomNavigationBar: Container(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16).r,
+      decoration: BoxDecoration(
+        color:Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          CustomElevatedButton(
+            text: 'Cancel',
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            buttonType: ButtonType.outlined,
+          ),
+          SizedBox(
+            width: 10.w,
+          ),
+          CustomElevatedButton(
+            text: "upload",
+            width: 200.w,
+            onPressed: () {
+              _uploadData(selectedItems??"");
+            },
+            isLoading: _loading,
+            buttonType: ButtonType.elevated,
+          ),
+        ],
+      ),),
+
+    // backgroundColor: const Color(0xFFf8f5f1),
       backgroundColor:Color(0xFFF5F7FA),
       appBar: AppBar(title:  Text("Upload Multiple Images",style: TextStyle(fontSize: 14.sp,fontWeight: FontWeight.bold,),),backgroundColor:Color(0xFFF5F7FA),centerTitle: true,),
       body: Padding(
@@ -120,6 +159,24 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
             scrollDirection: Axis.vertical,
             child: Column(
               children: [
+
+                Center(
+                  child: CustomSwitcher(
+                    firstTitle: "Offers",
+                    secondTitle: "Upload",
+                    isFirstSelected: isOfferSelected,
+                    onFirstTap: () {
+                      setState(() {
+                        isOfferSelected = true;
+                      });
+                    },
+                    onSecondTap: () {
+                      setState(() {
+                        isOfferSelected = false;
+                      });
+                    },
+                  ),
+                ),
                 _selectedImages.isEmpty? dottedContainer(context,"only 3 images are allowed")
                     :
                 Container(
@@ -249,47 +306,52 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
                 ),
               ),
             ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: _priceController,
-                  decoration: const InputDecoration(labelText: "Price"),
-                  keyboardType: TextInputType.number,
-                ),
-                TextField(
-                  controller: _descController,
-                  decoration: const InputDecoration(labelText: "Description"),
-                ),
-                CustomTextField(
-                  icon: Icons.location_on,
-                  name: 'price',
-                  labelName: 'Price',
-                  placeHolder: 'Enter Price ',
-                  validators: [FormBuilderValidators.required()],
-                ),
-                CustomTextField(
-                  icon: Icons.flag,
-                  name: 'description',
-                  labelName: 'Description',
-                  placeHolder: 'Enter Description ',
-                  validators: [FormBuilderValidators.required()],
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _loading ? null : _uploadData,
-                  child: _loading ? const CircularProgressIndicator() : const Text("Upload"),
-                ),
+                 SizedBox(height: 10.h),
+                if(!isOfferSelected)
+                  Column(
+                    children: [
 
-                TextButton(onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => GetAllPhotos(),));
-                }, child: Text("Show All")),
-                SizedBox(height: 30,),
-                ElevatedButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const SinglePhotoScreen()),
+                      SearchableDropdown(lableName: "Frame Type",
+                        dropdownKey: _dropdownKey,
+                        selectedValue: selectedItems,
+                        onChanged: (val) {
+                          if(val==null||val.isEmpty)return;
+                          setState(() {
+                            selectedItems = val;
+                          });
+                        },
+                      ),
+                      CustomTextField(
+                        icon: Icons.location_on,
+                        name: 'price',
+                        labelName: 'Price',
+                        placeHolder: 'Enter Price ',
+                        validators: [FormBuilderValidators.required()],
+                      ),
+                      CustomDescriptionField(
+                        // icon: Icon(Icons.design_services_sharp),
+                        MaxLines:  3,
+                        Maxlength:  25 ,
+                        name: "description",
+                        placeHolder: 'Enter Description',
+                        //initialValue: initialValue.isEmpty ? '' : initialValue,
+                        labelName: "Description",
+                        validators: [
+                          FormBuilderValidators.required()
+                        ],
+                        required: true,
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: Colors.black,
+                        ),
+                      ),
+
+                    ],
                   ),
-                  child: const Text("View Uploaded Photos"),
-                )
+
+                SizedBox(height: 20,),
+                CustomElevatedButton(text: "Show Images", onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => TryDashboard(),));
+                })
               ],
             ),
           ),
@@ -397,5 +459,151 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
       _selectedImages.removeAt(index);
     });
   }
+  Future<void> _uploadData(String category) async {
+    print("the category");
+    print("${category.toLowerCase()}");
+    if(isOfferSelected){
+      if (_selectedImages.isEmpty) {
+        showErrorToast("Please upload the image");
+        return;
+      }
+      else{
+        String bucketName='offers_bucket';
+        String tableName='offers_table';
+        try{
+          setState(() => _loading = true);
+          List<String?> imageUrls = [null, null, null];
 
+          for (int i = 0; i < _selectedImages.length && i < 3; i++) {
+            final fileName = '${DateTime.now().millisecondsSinceEpoch}_$i.jpg';
+
+            // Upload file
+            final fileBytes = await _selectedImages[i].readAsBytes();
+            await supabase.storage
+                .from(bucketName)
+                .uploadBinary(fileName, fileBytes, fileOptions: const FileOptions(upsert: false));
+
+            // Get public URL
+            final publicUrl = supabase.storage.from(bucketName).getPublicUrl(fileName);
+            imageUrls[i] = publicUrl;
+          }
+
+          // Insert into Supabase table
+          await supabase.from(tableName).insert({
+            'image1': imageUrls[0],
+            'image2': imageUrls[1],
+            'image3': imageUrls[2],
+          });
+
+          showSuccessToast("Offers Uploaded Successfully");
+          _formKey.currentState?.reset();
+          setState(() => _selectedImages = []);
+          Navigator.pop(context,true);
+        }catch(e){
+          print("aaaaaaaaaaaaaa");
+          print("${e.toString()}");
+          showErrorToast("Offers Uploaded failed");
+
+        }
+        finally{
+          setState(() => _loading = false);
+
+        }
+      }
+    }else{
+      if (_selectedImages.isEmpty) {
+        showErrorToast("Please upload the image");
+        return;
+      }
+      if (selectedItems==null||selectedItems!.isEmpty) {
+        showErrorToast("Please select the type");
+        return;
+      }
+
+      if (_selectedImages.isNotEmpty && (_formKey.currentState?.saveAndValidate() ?? false)) {
+        final formData = _formKey.currentState!.value;
+
+        setState(() => _loading = true);
+
+        try {
+          // Determine bucket and table based on category
+          String bucketName;
+          String tableName;
+print("${category.toLowerCase()=="baby kids"}");
+print("${category.toLowerCase()=="baby kids"}");
+print("${category.toLowerCase()=="baby kids"}");
+print("${category.toLowerCase().trim()=="baby kids"}");
+          switch (category.toLowerCase()) {
+            case 'wedding collection':
+              bucketName = 'wedding_bucket';
+              tableName = 'wedding_table';
+              break;
+            case 'single photo frame':
+              bucketName = 'single_photo_bucket';
+              tableName = 'single_photo_table';
+              break;
+            case 'group photo frame':
+              bucketName = 'group_photo_bucket';
+              tableName = 'group_photo_table';
+              break;
+            case 'couple frame':
+              bucketName = 'couple_frame_bucket';
+              tableName = 'couple_frame_table';
+              break;
+            case 'baby kids':
+              bucketName = 'baby_kid_bucket';
+              tableName = 'baby_kids_table';
+              break;
+            default:
+              bucketName = 'photos_bucket';
+              tableName = 'photos';
+          }
+
+          List<String?> imageUrls = [null, null, null];
+
+          for (int i = 0; i < _selectedImages.length && i < 3; i++) {
+            print("3333");
+            print(bucketName);
+            final fileName = '${DateTime.now().millisecondsSinceEpoch}_$i.jpg';
+
+            // Upload file
+            final fileBytes = await _selectedImages[i].readAsBytes();
+            await supabase.storage
+                .from(bucketName)
+                .uploadBinary(fileName, fileBytes, fileOptions: const FileOptions(upsert: false));
+
+            // Get public URL
+            final publicUrl = supabase.storage.from(bucketName).getPublicUrl(fileName);
+            imageUrls[i] = publicUrl;
+          }
+
+          // Insert into Supabase table
+          await supabase.from(tableName).insert({
+            'price': formData['price'].toString(),
+            'description': formData['description'].toString(),
+            'image1': imageUrls[0],
+            'image2': imageUrls[1],
+            'image3': imageUrls[2],
+          });
+
+          showSuccessToast("Uploaded Successfully");
+          _formKey.currentState?.reset();
+          setState(() => _selectedImages = []);
+          Navigator.pop(context,true);
+
+
+        } on StorageException catch (e) {
+          print('object');
+          showErrorToast("Storage Error: ${e.message}");
+          debugPrint("Supabase storage error: ${e.message}");
+        } catch (e) {
+          showErrorToast("Unexpected error: $e");
+          debugPrint("Unexpected error: $e");
+        } finally {
+          setState(() => _loading = false);
+        }
+      }
+
+    }
+      }
 }

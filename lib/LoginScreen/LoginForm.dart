@@ -23,13 +23,13 @@ import '../Twilio/TwilioScreen.dart';
 import 'RegisterScreen/AddRegister.dart';
 import 'RegisterScreen/FireBaseSignup.dart';
 import 'RegisterScreen/MobileNumberLogin.dart';
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class LoginForm extends StatefulWidget {
+  const LoginForm({super.key});
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<LoginForm> createState() => _LoginFormState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _LoginFormState extends State<LoginForm> {
   bool _isSigningIn=false;
   @override
   Widget build(BuildContext context) {
@@ -81,10 +81,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Color(0xFF0C1D37),
               ),
             ),
-             SizedBox(height: 180.h),
+             SizedBox(height: 280.h),
             // Buttons
             buildStartButton(
-              title: 'Get Started with Customer',
+              title: 'Login via Email',
               buttonColor: Color(0xFF0C1D37),
               onTap: () {
                 _isSigningIn?null: loginFunction();
@@ -97,26 +97,26 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               containerColor: Colors.white,
             ),
-            buildStartButton(
-              title: 'Get Started with Delivery Partner',
-              buttonColor:Color(0xFF0C1D37),
-              onTap: () {
-               // Navigator.push(context, MaterialPageRoute(builder: (context) =>LocalnotificationScreen() ,));
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>Twilioscreen() ,));
-                // Navigator.push(context, MaterialPageRoute(builder: (context) =>ShareEmailScreen() ,));
-                // Navigator.push(context, MaterialPageRoute(builder: (context) =>MobileLoginScreen(Role: "Delivery Agent",) ,));
-
-                print('Delivery tapped');
-              },
-              containerColor: Colors.grey.shade200,
-            ),
-            TextButton(onPressed: (){
-              _shareApp();
-
-            }, child: Text('Share Your Friends')),
-            TextButton(onPressed: (){
-Navigator.push(context, MaterialPageRoute(builder: (context) => EmailPDFScreen(),));
-            }, child: Text('Generate the PDF'))
+            // buildStartButton(
+            //   title: 'Get Started with Delivery Partner',
+            //   buttonColor:Color(0xFF0C1D37),
+            //   onTap: () {
+            //    // Navigator.push(context, MaterialPageRoute(builder: (context) =>LocalnotificationScreen() ,));
+            //     Navigator.push(context, MaterialPageRoute(builder: (context) =>Twilioscreen() ,));
+            //     // Navigator.push(context, MaterialPageRoute(builder: (context) =>ShareEmailScreen() ,));
+            //     // Navigator.push(context, MaterialPageRoute(builder: (context) =>MobileLoginScreen(Role: "Delivery Agent",) ,));
+            //
+            //     print('Delivery tapped');
+            //   },
+            //   containerColor: Colors.grey.shade200,
+            // ),
+//             TextButton(onPressed: (){
+//               _shareApp();
+//
+//             }, child: Text('Share Your Friends')),
+//             TextButton(onPressed: (){
+// Navigator.push(context, MaterialPageRoute(builder: (context) => EmailPDFScreen(),));
+//             }, child: Text('Generate the PDF'))
 
           ],
         ),
@@ -135,34 +135,61 @@ Navigator.push(context, MaterialPageRoute(builder: (context) => EmailPDFScreen()
     required Color containerColor,
   }) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        height: 50,
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+      child: SizedBox(
+        height: 55.h,
         width: double.infinity,
-        color: containerColor,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 1.0),
-          child: ElevatedButton(
-            onPressed: onTap,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: buttonColor,
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0), // flat button
-              ),
-              textStyle: TextStyle(fontSize: 16), // or use .sp if using screen util
+        child: ElevatedButton(
+          onPressed: onTap,
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.zero, // Gradient will handle padding
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.r),
             ),
-            child: Text(
-              title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+            elevation: 5,
+            shadowColor: Colors.black.withOpacity(0.2),
+            backgroundColor: Colors.transparent,
+          ),
+          child: Ink(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  const Color(0xFF0C1D37),
+                  const Color(0xFF0C1D31),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Container(
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.email_outlined,
+                    color: Colors.white,
+                    size: 22.sp,
+                  ),
+                  SizedBox(width: 12.w),
+                  Text(
+                    "Login with Email",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 17.sp,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
         ),
       ),
     );
+
   }
   Future<void> loginFunction() async {
     final SharedPreferences localDb = await SharedPreferences.getInstance();

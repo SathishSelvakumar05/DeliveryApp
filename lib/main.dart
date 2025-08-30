@@ -2,6 +2,10 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:delivery_app/CommonCubit/network_cubit.dart';
+import 'package:delivery_app/PhotoShop/Cubit/GroupCubit/group_cubit.dart';
+import 'package:delivery_app/PhotoShop/Cubit/OfferCubit/offer_cubit.dart';
+import 'package:delivery_app/PhotoShop/Cubit/SingleCubit/single_cubit.dart';
+import 'package:delivery_app/PhotoShop/Cubit/kidsCubit/kids_cubit.dart';
 import 'package:dialog_flowtter/dialog_flowtter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -17,15 +21,20 @@ import 'CustomerScreen/DeliveryScreen/Cubit/add_delivery_cubit.dart';
 import 'Firebase/PushNotification/PushNotification.dart';
 import 'LoginScreen/Cubit/add_user_cubit.dart';
 import 'LoginScreen/LoginForm.dart';
+import 'PhotoShop/Cubit/CoupleCubit/couple_cubit.dart';
+import 'PhotoShop/Cubit/wedding_cubit.dart';
+import 'RBAC/cubit/permission_cubit.dart';
 import 'Twilio/Cubit/twilio_cubit.dart';
 import 'Twilio/DiseasDetectionAI/AIDetection Screen.dart';
 import 'Twilio/OpenAI.dart';
 import 'Twilio/chat_dialog_flow/MainChatScreen.dart';
+import 'Twilio/mainLearnScreeb.dart';
 import 'firebase_options.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 final navigatorKey = GlobalKey<NavigatorState>();
 final FirebaseAuth auth = FirebaseAuth.instance;
 late DialogFlowtter dialogFlowtter;
+final SupaBase = Supabase.instance.client;
 
 
 // function to listen to background changes
@@ -131,6 +140,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return  MultiBlocProvider(
       providers: [
+        BlocProvider<PermissionCubit>(create: (context)=>PermissionCubit()),
         BlocProvider<AddUserCubit>(
           create: (context) => AddUserCubit(),
         ),
@@ -138,6 +148,14 @@ class MyApp extends StatelessWidget {
           create: (context) => DeliveryCubit(),
         ),
         BlocProvider<TwilioCubit>(create: (context)=>TwilioCubit(),),
+
+        BlocProvider<WeddingCubit>(create: (context)=>WeddingCubit()..fetchWeddingPhotos(),),
+        BlocProvider<CoupleCubit>(create: (context)=>CoupleCubit()..fetchCouplePhotos(),),
+        BlocProvider<KidsCubit>(create: (context)=>KidsCubit()..fetchKidsPhotos(),),
+        BlocProvider<SingleCubit>(create: (context)=>SingleCubit()..fetchSinglePhotos(),),
+        BlocProvider<GroupCubit>(create: (context)=>GroupCubit()..fetchGroupPhoto(),),
+
+        BlocProvider<OfferCubit>(create: (context)=>OfferCubit()..fetchOffersPhotos(),),
         // BlocProvider<InternetCubit>(
         //   create: (context) =>
         //       InternetCubit(connectivity: connectivity),
@@ -158,9 +176,11 @@ class MyApp extends StatelessWidget {
                     initialRoute: '/',
                     debugShowCheckedModeBanner: false,
                home: MainScreen(child:
-               //GenerateAIData()
-                 AuoLoginScreen()
-              // OpenAIScreen()
+              // DentalDetectPage()
+               // GenerateAIData()
+              //  AuoLoginScreen()
+               MainLearnScreen()
+               // OpenAIScreen()
                //DialogFlowChat()
                ));
 

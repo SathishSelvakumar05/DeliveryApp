@@ -64,43 +64,71 @@ class FoodCard extends StatelessWidget {
               ),
             ),
             // Title
-            Padding(
-              padding: const EdgeInsets.only(left: 8, top: 2, right: 8),
-              child: Text(
-                title,
-                style:  TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w600,
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 5.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title
+                    Text(
+                      title.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        color: Colors.grey[700],
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 4.h),
+                    // Price + Rating
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Price
+                        Flexible(
+                          child: Text(
+                            '₹$price',maxLines: 2,
+                            style: TextStyle(overflow: TextOverflow.ellipsis,
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        Spacer(),
+                        // Rating Badge
+                        Container(
+                          width: 34.w,
+                          height: 34.w, // keep square
+                          decoration: BoxDecoration(
+                            color: Colors.amber.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(4).r,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.star, size: 13.sp, color: Colors.amber),
+                              SizedBox(width: 2.w),
+                              Text(
+                                '4.9',
+                                style: TextStyle(
+                                  fontSize: 9.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-            ),
-// SizedBox(height: 20.h,),
-            // Price + Rating Row
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '₹$price',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  Row(
-                    children: const [
-                      Icon(Icons.star, size: 14, color: Colors.amber),
-                      SizedBox(width: 2),
-                      Text(
-                        '4.8',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            )
+
 
           ],
         ),

@@ -107,19 +107,19 @@ print("1");
               controller: _descController,
               decoration: const InputDecoration(labelText: "Description"),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _loading ? null : _uploadData,
-              child: _loading ? const CircularProgressIndicator() : const Text("Upload"),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const SinglePhotoScreen()),
-              ),
-              child: const Text("View Uploaded Photos"),
-            )
+            // const SizedBox(height: 20),
+            // ElevatedButton(
+            //   onPressed: _loading ? null : _uploadData,
+            //   child: _loading ? const CircularProgressIndicator() : const Text("Upload"),
+            // ),
+            // const SizedBox(height: 20),
+            // ElevatedButton(
+            //   onPressed: () => Navigator.push(
+            //     context,
+            //     MaterialPageRoute(builder: (_) => const SinglePhotoScreen()),
+            //   ),
+            //   child: const Text("View Uploaded Photos"),
+            // )
           ],
         ),
       ),

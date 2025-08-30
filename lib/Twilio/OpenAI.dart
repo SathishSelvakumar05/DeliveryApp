@@ -8,22 +8,20 @@ import 'chat_dialog_flow/MainChatScreen.dart';
 
 class OpenAIScreen extends StatelessWidget {
   // Your OpenAI API key here
-  static const openAIKey = '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';
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(debugShowCheckedModeBanner: false,
       title: 'OpenAI Chatbot',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: ChatScreen(apiKey: openAIKey),
+      home: ChatScreen(),
     );
   }
 }
 
 class ChatScreen extends StatefulWidget {
-  final String apiKey;
 
-  ChatScreen({required this.apiKey});
+  ChatScreen();
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -40,8 +38,10 @@ class _ChatScreenState extends State<ChatScreen> {
   final _controller = TextEditingController();
   final List<Message> _messages = [];
   bool _isLoading = false;
+  static const openAIKey = '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';
 
   Future<void> sendMessage(String prompt) async {
+
     setState(() {
       _messages.add(Message(prompt, true));
       _isLoading = true;
@@ -51,7 +51,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     final headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${widget.apiKey}',
+      'Authorization': 'Bearer ${openAIKey}',
     };
 
     final body = jsonEncode({
@@ -117,11 +117,13 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('OpenAI Chatbot'),actions: [ Padding(
+      appBar: AppBar(title: Text('OpenAI Chatbot'),
+        actions: [ Padding(
         padding: const EdgeInsets.only(right: 16),
         child: GestureDetector(
           onTap: () {
-Navigator.push(context, MaterialPageRoute(builder: (context) => DialogFlowChat(),));          },
+Navigator.push(context, MaterialPageRoute(builder: (context) => ChatStreamExample(),));          },
+// Navigator.push(context, MaterialPageRoute(builder: (context) => DialogFlowChat(),));          },
           child: Container(
             decoration: BoxDecoration(
               color: Colors.red.withOpacity(0.2),
@@ -261,3 +263,40 @@ Navigator.push(context, MaterialPageRoute(builder: (context) => DialogFlowChat()
     );
   }
 }
+
+
+class ChatStreamExample extends StatelessWidget {
+  // Fake chat messages stream
+  Stream<String> chatStream() async* {
+    List<String> messages = ["Hi 👋", "How are you?", "I am fine ✅", "Bye 👋"];
+    for (var msg in messages) {
+      await Future.delayed(Duration(seconds: 2));
+      yield msg;  // emit new message
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Chat Stream")),
+      body: StreamBuilder<String>(
+        stream: chatStream(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: Text("Waiting for messages..."));
+          } else if (snapshot.hasError) {
+            return Center(child: Text("Error: ${snapshot.error}"));
+          } else if (snapshot.hasData) {
+            return Center(child: Text("New Message: ${snapshot.data}"));
+          } else {
+            return Center(child: Text("No messages yet"));
+          }
+        },
+      ),
+    );
+  }
+}
+
+
+
+

@@ -1,10 +1,21 @@
+import 'package:animations/animations.dart';
+import 'package:delivery_app/PhotoShop/Cubit/CoupleCubit/couple_cubit.dart';
+import 'package:delivery_app/PhotoShop/Cubit/GroupCubit/group_cubit.dart';
+import 'package:delivery_app/PhotoShop/Cubit/OfferCubit/offer_cubit.dart';
+import 'package:delivery_app/PhotoShop/Cubit/SingleCubit/single_cubit.dart';
+import 'package:delivery_app/PhotoShop/Cubit/kidsCubit/kids_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../PhotoShop/Cubit/wedding_cubit.dart';
+import '../../PhotoShop/Screen/UploadMultiImage.dart';
 import '../../PhotoShop/Screen/single_photo_screen.dart';
+import '../../PhotoShop/Widgets/CarouselSlider.dart';
+import '../../PhotoShop/Widgets/animation.dart';
 import '../../main.dart';
 
 class TryDashboard extends StatefulWidget {
@@ -22,14 +33,12 @@ class _TryDashboardState extends State<TryDashboard> {
   bool _loading = true;
 
   Future<void> _fetchPhotos() async {
-    final response = await supabase.from('photos').select();
-    print("the response");
-    print("${response.runtimeType}");
-    print("${response.toString()}");
-    setState(() {
-      _photos = response;
-      _loading = false;
-    });
+   await context.read<WeddingCubit>().fetchWeddingPhotos();
+   await context.read<KidsCubit>().fetchKidsPhotos();
+   await context.read<CoupleCubit>().fetchCouplePhotos();
+   await context.read<SingleCubit>().fetchSinglePhotos();
+   await context.read<GroupCubit>().fetchGroupPhoto();
+   await context.read<OfferCubit>().fetchOffersPhotos();
   }
 
   @override
@@ -50,7 +59,7 @@ class _TryDashboardState extends State<TryDashboard> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          padding:  EdgeInsets.all(16.r),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -58,8 +67,8 @@ class _TryDashboardState extends State<TryDashboard> {
               Row(
                 children: [
                   Container(
-                    height: 40,
-                    width: 40,
+                    height: 40.h,
+                    width: 40.w,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.blue, // background color
@@ -76,6 +85,55 @@ class _TryDashboardState extends State<TryDashboard> {
                     "${userName}",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
+                    Spacer(),
+                  OpenContainer(
+                    closedElevation: 0,
+                    transitionType: ContainerTransitionType.fade,
+                    transitionDuration: const Duration(milliseconds: 500),
+                    closedBuilder: (context, action) {
+                      return  Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        child: CircleAvatar(
+                          radius: 20.sp,
+                          backgroundColor: Colors.pink.shade400,
+                          child: Icon(
+                            Icons.add,
+                            color: Colors.white,
+                            size: 22,
+                          ),
+                        ),
+                      );
+                    },
+                    openBuilder: (context, action) {
+                      return const UploadMultiImage();
+                    },
+                  ),
+                    // Padding(
+                    //   padding:  EdgeInsets.only(right: 20).r,
+                    //   child:
+                    //   InkWell(
+                    //     borderRadius: BorderRadius.circular(30).r,
+                    //     onTap: () {
+                    //       //UploadMultiImage
+                    //       Navigator.push(context, MaterialPageRoute(builder: (context) =>AnimationScreen(),)).then((val){
+                    //         if(val==true){
+                    //           _fetchPhotos();
+                    //
+                    //
+                    //         }
+                    //       });            },
+                    //     child: CircleAvatar(
+                    //       radius: 20.sp,
+                    //       backgroundColor: Colors.pink.shade400,
+                    //       child: Icon(
+                    //         Icons.add,
+                    //         color: Colors.white,
+                    //         size: 22,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+
                 ],
               ),
               const SizedBox(height: 16),
@@ -104,71 +162,98 @@ class _TryDashboardState extends State<TryDashboard> {
                   Text("Trending Offers",
                       style: TextStyle(
                           fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                  Text("See All", style: TextStyle(color: Colors.blue)),
                 ],
               ),
-              const SizedBox(height: 10),
-              Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: Color(0xFF0C1D37),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      height: 50,
-                      width: 50,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(Iconsax.user, color: Colors.blue),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text("Dr. Alana Reuter",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                          Text("Dentist Consultation",
-                              style: TextStyle(color: Colors.white70)),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      children: const [
-                        Text("Monday, 26 July",
-                            style: TextStyle(color: Colors.white)),
-                        Text("09:00 - 10:00",
-                            style: TextStyle(color: Colors.white70)),
-                      ],
-                    ),
-                  ],
-                ),
+               SizedBox(height: 10.h),
+              BlocBuilder<OfferCubit, OfferState>(
+                builder: (context, state) {
+                  if (state.isOfferLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state.isOfferData!.isEmpty) {
+                    return const Center(child: Text("No Offers Available"));
+                  }
+
+                  final lastOffer = state.isOfferData!.last;
+
+                  // Collect only non-empty image URLs
+                  final imageUrls = [
+                    lastOffer.image1,
+                    lastOffer.image2,
+                    lastOffer.image3,
+                  ].where((img) => img != null && img.trim().isNotEmpty).toList();
+
+                  if (imageUrls.isEmpty) {
+                    return const Center(child: Text("No Images Available"));
+                  }
+
+                  return ImageCarousel(
+                    imageUrls: imageUrls,
+                  );
+                },
               ),
+              //
+              // SizedBox(height: 10.h),
+              // Container(
+              //   padding: const EdgeInsets.all(14).r,
+              //   decoration: BoxDecoration(
+              //     color: Color(0xFF0C1D37),
+              //     borderRadius: BorderRadius.circular(16).r,
+              //   ),
+              //   child: Row(
+              //     children: [
+              //       Container(
+              //         height: 50.h,
+              //         width: 50.w,
+              //         decoration: const BoxDecoration(
+              //           color: Colors.white,
+              //           shape: BoxShape.circle,
+              //         ),
+              //         child: const Icon(Iconsax.user, color: Colors.blue),
+              //       ),
+              //        SizedBox(width: 12.w),
+              //       Expanded(
+              //         child: Column(
+              //           crossAxisAlignment: CrossAxisAlignment.start,
+              //           children: const [
+              //             Text("S. Ram Kumar",
+              //                 style: TextStyle(
+              //                     color: Colors.white,
+              //                     fontWeight: FontWeight.bold)),
+              //             Text("VFX Editor",
+              //                 style: TextStyle(color: Colors.white70)),
+              //           ],
+              //         ),
+              //       ),
+              //       Column(
+              //         children: const [
+              //           Text("Monday to Saturday",
+              //               style: TextStyle(color: Colors.white)),
+              //           Text("9 AM - 10 PM",
+              //               style: TextStyle(color: Colors.white70)),
+              //         ],
+              //       ),
+              //     ],
+              //   ),
+              // ),
               const SizedBox(height: 20),
 
-              // Doctor Speciality
-              const Text("Doctor Speciality",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 10),
-              SizedBox(
-                height: 80,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    specialityItem(Iconsax.user, "Dentist"),
-                    specialityItem(Iconsax.heart, "Cardiologist"),
-                    specialityItem(Iconsax.activity, "Orthopedic"),
-                    specialityItem(Iconsax.eye, "Neurologist"),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
+              // // Doctor Speciality
+              // const Text("Doctor Speciality",
+              //     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              // const SizedBox(height: 10),
+              // SizedBox(
+              //   height: 80,
+              //   child: ListView(
+              //     scrollDirection: Axis.horizontal,
+              //     children: [
+              //       specialityItem(Iconsax.user, "Dentist"),
+              //       specialityItem(Iconsax.heart, "Cardiologist"),
+              //       specialityItem(Iconsax.activity, "Orthopedic"),
+              //       specialityItem(Iconsax.eye, "Neurologist"),
+              //     ],
+              //   ),
+              // ),
+              // const SizedBox(height: 20),
 
               // Nearby Hospitals
               Row(
@@ -179,10 +264,11 @@ class _TryDashboardState extends State<TryDashboard> {
                   Spacer(),
                   TextButton(
                       onPressed: () {
+                        final WeddingData=context.read<WeddingCubit>().state.weddingdata??[];
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => SinglePhotoScreen(),
+                              builder: (context) => SinglePhotoScreen(title:"Wedding",passedData: WeddingData,),
                             ));
                       },
                       child: Text(
@@ -195,24 +281,41 @@ class _TryDashboardState extends State<TryDashboard> {
                 ],
               ),
               const SizedBox(height: 10),
-              _photos.isEmpty
-                  ? SizedBox(
-                      height: 100.h,
-                      child: Center(child: Text("No Images")),
-                    )
-                  : SizedBox(
+              BlocBuilder<WeddingCubit, WeddingState>(
+                builder: (context, state) {
+                  if (state.isWeddingLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  else if (state.weddingdata!.isNotEmpty) {
+                    return SizedBox(
                       height: 110.h,
                       child: ListView.builder(
-                        itemCount: _photos.length,
+                        itemCount: state.weddingdata!.length,
                         itemBuilder: (context, index) {
-                          final price = _photos[index]['price'] ?? "";
-                          final imageUrl = _photos[index]['image1'] ?? "";
-                          final desc = _photos[index]['description'] ?? "";
-                          return hospitalCard(price: price, imageUrl: imageUrl,description: desc);
+                          final photos = state.weddingdata![index];
+                          final price = photos.price;
+                          final imageUrl = photos.image1;
+                          final desc = photos.description;
+                          return hospitalCard(
+                            price: price,
+                            imageUrl: imageUrl,
+                            description: desc,
+                          );
                         },
                         scrollDirection: Axis.horizontal,
                       ),
-                    ),
+                    );
+                  }
+                  else {
+                    return const Center(
+                      child: Text("Not available"),
+                    );
+                  }
+                },
+              ),
+              const SizedBox(height: 10),
 
               const SizedBox(height: 10),
 
@@ -226,10 +329,11 @@ class _TryDashboardState extends State<TryDashboard> {
                   Spacer(),
                   TextButton(
                       onPressed: () {
+                        final kidsData=context.read<KidsCubit>().state.kidsData??[];
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => SinglePhotoScreen(),
+                              builder: (context) => SinglePhotoScreen(title:"Kids",passedData: kidsData,),
                             ));
                       },
                       child: Text(
@@ -242,24 +346,223 @@ class _TryDashboardState extends State<TryDashboard> {
                 ],
               ),
               const SizedBox(height: 10),
-              _photos.isEmpty
-                  ? SizedBox(
-                height: 100.h,
-                child: Center(child: Text("No Images")),
-              )
-                  : SizedBox(
+              BlocBuilder<KidsCubit, KidsState>(
+                builder: (context, state) {
+                  if (state.isKidsLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  else if (state.kidsData!.isNotEmpty) {
+                    return SizedBox(
+                      height: 110.h,
+                      child: ListView.builder(
+                        itemCount: state.kidsData!.length,
+                        itemBuilder: (context, index) {
+                          final photos = state.kidsData![index];
+                          final price = photos.price;
+                          final imageUrl = photos.image1;
+                          final desc = photos.description;
+                          return hospitalCard(
+                            price: price,
+                            imageUrl: imageUrl,
+                            description: desc,
+                          );
+                        },
+                        scrollDirection: Axis.horizontal,
+                      ),
+                    );
+                  }
+                  else {
+                    return const Center(
+                      child: Text("Not available"),
+                    );
+                  }
+                },
+              ),
+              // Nearby Hospitals
+              Row(
+                children: [
+                  Text("Couple Collections",
+                      style: TextStyle(
+                          fontSize: 15.sp, fontWeight: FontWeight.bold)),
+                  Spacer(),
+                  TextButton(
+                      onPressed: () {
+                        final coupleData=context.read<CoupleCubit>().state.coupleData??[];
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SinglePhotoScreen(title:"Couple",passedData: coupleData,),
+                            ));
+                      },
+                      child: Text(
+                        "View more",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15.sp,
+                            color: Color(0xFF0C1D37)),
+                      ))
+                ],
+              ),
+              const SizedBox(height: 10),
+        BlocBuilder<CoupleCubit, CoupleState>(
+          builder: (context, state) {
+            if (state.isCoupleLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            else if (state.coupleData!.isNotEmpty) {
+              return SizedBox(
                 height: 110.h,
                 child: ListView.builder(
-                  itemCount: _photos.length,
+                  itemCount: state.coupleData!.length,
                   itemBuilder: (context, index) {
-                    final price = _photos[index]['price'] ?? "";
-                    final imageUrl = _photos[index]['image1'] ?? "";
-                    final desc = _photos[index]['description'] ?? "";
-                    return hospitalCard(price: price, imageUrl: imageUrl,description: desc);
+                    final photos = state.coupleData![index];
+                    final price = photos.price;
+                    final imageUrl = photos.image1;
+                    final desc = photos.description;
+                    return hospitalCard(
+                      price: price,
+                      imageUrl: imageUrl,
+                      description: desc,
+                    );
                   },
                   scrollDirection: Axis.horizontal,
                 ),
+              );
+            }
+            else {
+              return const Center(
+                child: Text("Not available"),
+              );
+            }
+          },
               ),
+
+
+              Row(
+                children: [
+                  Text("Single Collections",
+                      style: TextStyle(
+                          fontSize: 15.sp, fontWeight: FontWeight.bold)),
+                  Spacer(),
+                  TextButton(
+                      onPressed: () {
+                        final singleData=context.read<SingleCubit>().state.singleData??[];
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SinglePhotoScreen(title:"Single",passedData: singleData,),
+                            ));
+                      },
+                      child: Text(
+                        "View more",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15.sp,
+                            color: Color(0xFF0C1D37)),
+                      ))
+                ],
+              ),
+              const SizedBox(height: 10),
+              BlocBuilder<SingleCubit, SingleState>(
+                builder: (context, state) {
+                  if (state.isSingleLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  else if (state.singleData!.isNotEmpty) {
+                    return SizedBox(
+                      height: 110.h,
+                      child: ListView.builder(
+                        itemCount: state.singleData!.length,
+                        itemBuilder: (context, index) {
+                          final photos = state.singleData![index];
+                          final price = photos.price;
+                          final imageUrl = photos.image1;
+                          final desc = photos.description;
+                          return hospitalCard(
+                            price: price,
+                            imageUrl: imageUrl,
+                            description: desc,
+                          );
+                        },
+                        scrollDirection: Axis.horizontal,
+                      ),
+                    );
+                  }
+                  else {
+                    return const Center(
+                      child: Text("Not available"),
+                    );
+                  }
+                },
+              ),
+
+              Row(
+                children: [
+                  Text("Group Collections",
+                      style: TextStyle(
+                          fontSize: 15.sp, fontWeight: FontWeight.bold)),
+                  Spacer(),
+                  TextButton(
+                      onPressed: () {
+                        final groupData=context.read<GroupCubit>().state.isGroupData??[];
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SinglePhotoScreen(title:"Group",passedData: groupData,),
+                            ));
+                      },
+                      child: Text(
+                        "View more",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15.sp,
+                            color: Color(0xFF0C1D37)),
+                      ))
+                ],
+              ),
+              const SizedBox(height: 10),
+              BlocBuilder<GroupCubit, GroupState>(
+                builder: (context, state) {
+                  if (state.isGroupLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  else if (state.isGroupData!.isNotEmpty) {
+                    return SizedBox(
+                      height: 110.h,
+                      child: ListView.builder(
+                        itemCount: state.isGroupData!.length,
+                        itemBuilder: (context, index) {
+                          final photos = state.isGroupData![index];
+                          final price = photos.price;
+                          final imageUrl = photos.image1;
+                          final desc = photos.description;
+                          return hospitalCard(
+                            price: price,
+                            imageUrl: imageUrl,
+                            description: desc,
+                          );
+                        },
+                        scrollDirection: Axis.horizontal,
+                      ),
+                    );
+                  }
+                  else {
+                    return const Center(
+                      child: Text("Not available"),
+                    );
+                  }
+                },
+              ),
+
+
             ],
           ),
         ),
@@ -326,7 +629,7 @@ class _TryDashboardState extends State<TryDashboard> {
               child: Row(
                 children: [
                   Icon(Icons.attach_money, size: 12.sp, color: Colors.green),
-                  SizedBox(width: 4),
+                  SizedBox(width: 4.w),
                   Expanded(
                     child: Text(
                       price,
@@ -350,7 +653,7 @@ class _TryDashboardState extends State<TryDashboard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(Icons.info_outline, size: 10.sp, color: Colors.blueGrey),
-                  SizedBox(width: 4),
+                  SizedBox(width: 4.w),
                   Expanded(
                     child: Text(
                       "${description}",
@@ -358,7 +661,7 @@ class _TryDashboardState extends State<TryDashboard> {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 8.sp,
-                        color: Colors.grey.shade600,
+                        color: Colors.black87,
                       ),
                     ),
                   ),
@@ -372,3 +675,5 @@ class _TryDashboardState extends State<TryDashboard> {
     );
   }
 }
+
+

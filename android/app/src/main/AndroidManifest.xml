@@ -77,11 +77,12 @@
 
 
         <!-- New Year app icon  -->
+
         <activity-alias
-            android:name=".MainActivityNewYear"
-            android:enabled="false"
+            android:name=".MainActivity"
+            android:enabled="true"
             android:exported="true"
-            android:icon="@mipmap/chnage_image"
+            android:icon="@mipmap/ic_launcher"
             android:targetActivity=".MainActivity"
             android:theme="@style/LaunchTheme">
             <intent-filter>
@@ -89,6 +90,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
+
+            <activity-alias
+                android:name=".MainActivityNewYear"
+                android:enabled="false"
+                android:exported="true"
+                android:icon="@mipmap/logo"
+                android:targetActivity=".MainActivity"
+                android:theme="@style/LaunchTheme">
+                <intent-filter>
+                    <action android:name="android.intent.action.MAIN" />
+                    <category android:name="android.intent.category.LAUNCHER" />
+                </intent-filter>
+            </activity-alias>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

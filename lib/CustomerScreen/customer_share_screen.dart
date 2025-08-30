@@ -29,11 +29,24 @@ class _ClinicDetailsScreenState extends State<ClinicDetailsScreen> {
     convertData();
     super.initState();
   }
-  convertData() {
-    overAllData.add(widget.photo['image1']);
-    overAllData.add(widget.photo['image2']);
-    overAllData.add(widget.photo['image3']);
+  void convertData() {
+    final imageKeys = ['image1', 'image2', 'image3'];
+
+    for (final key in imageKeys) {
+      final url = widget.photo[key];
+
+      // Only add if non-null and not empty
+      if (url != null && url.toString().trim().isNotEmpty) {
+        overAllData.add(url.toString());
+      }
+    }
   }
+
+  // convertData() {
+  //   overAllData.add(widget.photo['image1']);
+  //   overAllData.add(widget.photo['image2']);
+  //   overAllData.add(widget.photo['image3']);
+  // }
 
 
   @override

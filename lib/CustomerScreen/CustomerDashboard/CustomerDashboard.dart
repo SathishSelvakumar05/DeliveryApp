@@ -59,33 +59,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return  Scaffold(
 
         key: _scaffoldKey,
-        // floatingActionButtonLocation: ExpandableFab.location,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        /* bottomNavigationBar: CurvedNavigationBar(
-                  index: _bottomNavIndex,
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  // buttonBackgroundColor: Constants.white,
-                  height: 55.h,
-                  animationCurve: Curves.decelerate,
-                  backgroundColor: Theme.of(context).primaryColorLight,
-                  items: _navigationItem,
-                  onTap: (index) {
-                    setState(() {
-                      _bottomNavIndex = index; // Update the index
-                    });
-                  },
-                ),*/
         extendBody: true,
-
-//                 floatingActionButton: _bottomNavIndex == 0
-//                     ? FloatingActionButton(backgroundColor: Colors.white,
-//                   onPressed: () {
-// Navigator.push(context, MaterialPageRoute(builder: (context) => DeliveryListScreen(),));                  },
-//                   child: Icon(Icons.add,color:  Color(0xFF0C1D37),),
-//                 )
-//                     : null,
-
-        // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomAppBar(
           height: 66.h,
           color: Colors.white,
@@ -93,65 +68,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
           notchMargin: 10.r,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: List.generate(3, (index) => _buildNavItem(index)),
+            children: List.generate(2, (index) => _buildNavItem(index)),
           ),
         ),
         body: _bottomNavIndex == 0
             ? TryDashboard()
             : _bottomNavIndex == 1
-            ? TryDashboard()
+            ? CustomerProfile()
             : _bottomNavIndex == 2
             ?TryDashboard():
         // ClinicDetailsScreen():
         CustomerProfile()
 
     );
-      // BlocBuilder<InternetCubit, loading>(
-      //   builder: (context, InternetState) {
-      //     if (InternetState.checkInternet!) {
-      //       if (_bottomNavIndex == null) {
-      //         return Scaffold(
-      //           body: const Center(
-      //             child: CircularProgressIndicator(),
-      //           ),
-      //         );
-      //       }
-      //       return Scaffold(
-      //         appBar: AppBar(
-      //           centerTitle: true,title: Text('data'),
-      //           actions: [],
-      //           leading: SizedBox(),
-      //         ),
-      //         key: _scaffoldKey,
-      //         backgroundColor: Color(0xfff5f5f5),
-      //         extendBody: true,
-      //         bottomNavigationBar: BottomAppBar(
-      //           height: 66.h,
-      //           color: Colors.white,
-      //           shape: const CircularNotchedRectangle(),
-      //           notchMargin: 10.r,
-      //           child: Row(
-      //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //             children: List.generate(5, (index) => _buildNavItem(index)),
-      //           ),
-      //         ),
-      //         body: _bottomNavIndex == 0
-      //             ? UserListScreen()
-      //             : _bottomNavIndex == 1
-      //             ? UserListScreen()
-      //             : _bottomNavIndex == 2
-      //             ? UserListScreen()
-      //             : _bottomNavIndex == 3
-      //             ? UserListScreen()
-      //             : UserListScreen(),
-      //       );
-      //     } else {
-      //       return
-      //       //   Scaffold(
-      //       //   body: NoInternetConnection(),
-      //       // );
-      //     }
-      //   });
   }
 
   Widget _buildNavItem(int index) {
@@ -159,7 +88,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final icons = [
       // [Remix.id_card_line, Remix.id_card_fill],
       [Remix.dashboard_2_line, Remix.dashboard_2_fill],
-      [Remix.home_6_line, Remix.home_6_fill],
+      // [Remix.home_6_line, Remix.home_6_fill],
 
       // [Remix.settings_2_line, Remix.settings_2_fill],
       [Remix.user_3_line, Remix.user_3_fill],
@@ -168,7 +97,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       // 'Eagle View',
       // 'Vehicle List',
       'Dashboard',
-      'Live Tracking',
+      // 'Live Tracking',
       'Profile',
     ];
 

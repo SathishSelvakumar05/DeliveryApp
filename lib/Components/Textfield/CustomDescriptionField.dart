@@ -105,7 +105,7 @@ class CustomDescriptionField extends StatelessWidget {
               errorStyle: TextStyle(
                   color: loginField! ? Colors.red : Colors.redAccent.shade100),
               hintText: placeHolder,
-              hintStyle: TextStyleClass.textSize15(),
+              hintStyle: TextStyleClass.textSize15(color: Theme.of(context).hintColor),
               prefixIcon: icon,
              fillColor: Colors.white,
              // fillColor: loginField! ? Colors.black : Color(0xfff5f5f5),
