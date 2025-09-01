@@ -108,31 +108,6 @@ class _TryDashboardState extends State<TryDashboard> {
                       return const UploadMultiImage();
                     },
                   ),
-                    // Padding(
-                    //   padding:  EdgeInsets.only(right: 20).r,
-                    //   child:
-                    //   InkWell(
-                    //     borderRadius: BorderRadius.circular(30).r,
-                    //     onTap: () {
-                    //       //UploadMultiImage
-                    //       Navigator.push(context, MaterialPageRoute(builder: (context) =>AnimationScreen(),)).then((val){
-                    //         if(val==true){
-                    //           _fetchPhotos();
-                    //
-                    //
-                    //         }
-                    //       });            },
-                    //     child: CircleAvatar(
-                    //       radius: 20.sp,
-                    //       backgroundColor: Colors.pink.shade400,
-                    //       child: Icon(
-                    //         Icons.add,
-                    //         color: Colors.white,
-                    //         size: 22,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
 
                 ],
               ),

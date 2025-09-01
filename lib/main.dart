@@ -178,8 +178,8 @@ class MyApp extends StatelessWidget {
                home: MainScreen(child:
               // DentalDetectPage()
                // GenerateAIData()
-              //  AuoLoginScreen()
-               MainLearnScreen()
+              AuoLoginScreen()
+              // MainLearnScreen()
                // OpenAIScreen()
                //DialogFlowChat()
                ));

@@ -102,6 +102,7 @@ dependencies:
   flutter_staggered_animations: ^1.1.1
   flutter_secure_storage: ^9.2.4
   twilio_flutter: ^0.0.9
+  easy_sidemenu: ^0.6.0
 
 
 

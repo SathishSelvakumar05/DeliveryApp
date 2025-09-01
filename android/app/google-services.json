@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "784417889490-itorqules05vo29svmqu066jpmlfmimu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.delivery_app",
+            "certificate_hash": "f9a2a68e98cb546e69ff2c662268be3cb3c26788"
+          }
+        },
+        {
           "client_id": "784417889490-f34roc19r04g8co00mvl9gf1hik3pfbp.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -63,6 +71,50 @@
           "android_info": {
             "package_name": "com.example.delivery_app.sit",
             "certificate_hash": "6ee82c3e153d51a8d9a2ceb7fc4f587592757608"
+          }
+        },
+        {
+          "client_id": "784417889490-f34roc19r04g8co00mvl9gf1hik3pfbp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChv4zxcfbCH1V3Pwyaf2ZDR7UFwNq89uE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "784417889490-f34roc19r04g8co00mvl9gf1hik3pfbp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "784417889490-k0t54mlbh081r0ehtch9cs198iu8o1or.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.deliveryApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:784417889490:android:c14b80a270d1e90b0c610b",
+        "android_client_info": {
+          "package_name": "com.example.delivery_app.uat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "784417889490-16l43fke1k9j9o9dij7kffl68rbg0sva.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.delivery_app.uat",
+            "certificate_hash": "f9a2a68e98cb546e69ff2c662268be3cb3c26788"
           }
         },
         {
