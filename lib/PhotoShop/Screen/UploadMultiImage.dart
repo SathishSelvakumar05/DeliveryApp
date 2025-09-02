@@ -40,74 +40,8 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
   final supabase = Supabase.instance.client;
 
 
-
-  // Future<void> _uploadData() async {
-  //   if(_selectedImages.isEmpty){
-  //     showErrorToast("please upload the image");
-  //   }
-  //   if (_selectedImages.isNotEmpty &&_formKey.currentState!.saveAndValidate() ?? false) {
-  //     final formData = _formKey.currentState!.value;
-  //   //   ScaffoldMessenger.of(context).showSnackBar(
-  //   //     const SnackBar(content: Text("Please select images, enter price & description")),
-  //   //   );
-  //   //   return;
-  //   // }
-  //
-  //   setState(() => _loading = true);
-  //
-  //   try {
-  //     const bucketName = 'supabase-bucket';
-  //     List<String?> imageUrls = [null, null, null];
-  //
-  //     for (int i = 0; i < _selectedImages.length && i < 3; i++) {
-  //       final fileName = '${DateTime.now().millisecondsSinceEpoch}_$i.jpg';
-  //
-  //       // Upload file
-  //       final fileBytes = await _selectedImages[i].readAsBytes();
-  //       await supabase.storage
-  //           .from(bucketName)
-  //           .uploadBinary(fileName, fileBytes, fileOptions: const FileOptions(upsert: false,));
-  //
-  //       // Get public URL
-  //       final publicUrl = supabase.storage.from(bucketName).getPublicUrl(fileName);
-  //       imageUrls[i] = publicUrl;
-  //     }
-  //
-  //     // Insert into Supabase table
-  //     await supabase.from('photos').insert({
-  //       'price':  formData['price'].toString(),
-  //       'description':formData['description'].toString(),
-  //       'image1': imageUrls[0],
-  //       'image2': imageUrls[1],
-  //       'image3': imageUrls[2],
-  //     });
-  //
-  //   showSuccessToast("Uploaded Successfully");
-  //
-  //     _priceController.clear();
-  //     _descController.clear();
-  //     setState(() => _selectedImages = []);
-  //
-  //   } on StorageException catch (e) {
-  //     showErrorToast("Storage Error: ${e.message}");
-  //     debugPrint("Supabase storage error: ${e.message}");
-  //     // ScaffoldMessenger.of(context).showSnackBar(
-  //     //   SnackBar(content: Text("")),
-  //     // );
-  //   } catch (e) {
-  //     showErrorToast("Unexpected error: $e");
-  //     debugPrint("Unexpected error: $e");
-  //     // ScaffoldMessenger.of(context).showSnackBar(
-  //     //   SnackBar(content: Text("Error: $e")),
-  //     // );
-  //   } finally {
-  //     setState(() => _loading = false);
-  //   }}
-  //
-  // }
-
   final GlobalKey _dropdownKey = GlobalKey();
-  String? selectedItems ;
+  // String? selectedItems ;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -140,7 +74,7 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
             text: "upload",
             width: 200.w,
             onPressed: () {
-              _uploadData(selectedItems??"");
+              _uploadData();
             },
             isLoading: _loading,
             buttonType: ButtonType.elevated,
@@ -310,19 +244,19 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
                 if(!isOfferSelected)
                   Column(
                     children: [
-
-                      SearchableDropdown(lableName: "Frame Type",
-                        dropdownKey: _dropdownKey,
-                        selectedValue: selectedItems,
-                        onChanged: (val) {
-                          if(val==null||val.isEmpty)return;
-                          setState(() {
-                            selectedItems = val;
-                          });
-                        },
-                      ),
+                      //
+                      // SearchableDropdown(lableName: "Frame Type",
+                      //   dropdownKey: _dropdownKey,
+                      //   selectedValue: selectedItems,
+                      //   onChanged: (val) {
+                      //     if(val==null||val.isEmpty)return;
+                      //     setState(() {
+                      //       selectedItems = val;
+                      //     });
+                      //   },
+                      // ),
                       CustomTextField(
-                        icon: Icons.location_on,
+                        icon: Icons.currency_rupee,
                         name: 'price',
                         labelName: 'Price',
                         placeHolder: 'Enter Price ',
@@ -348,10 +282,6 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
                     ],
                   ),
 
-                SizedBox(height: 20,),
-                CustomElevatedButton(text: "Show Images", onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => TryDashboard(),));
-                })
               ],
             ),
           ),
@@ -459,9 +389,8 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
       _selectedImages.removeAt(index);
     });
   }
-  Future<void> _uploadData(String category) async {
-    print("the category");
-    print("${category.toLowerCase()}");
+  Future<void> _uploadData() async {
+
     if(isOfferSelected){
       if (_selectedImages.isEmpty) {
         showErrorToast("Please upload the image");
@@ -515,10 +444,6 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
         showErrorToast("Please upload the image");
         return;
       }
-      if (selectedItems==null||selectedItems!.isEmpty) {
-        showErrorToast("Please select the type");
-        return;
-      }
 
       if (_selectedImages.isNotEmpty && (_formKey.currentState?.saveAndValidate() ?? false)) {
         final formData = _formKey.currentState!.value;
@@ -529,35 +454,8 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
           // Determine bucket and table based on category
           String bucketName;
           String tableName;
-print("${category.toLowerCase()=="baby kids"}");
-print("${category.toLowerCase()=="baby kids"}");
-print("${category.toLowerCase()=="baby kids"}");
-print("${category.toLowerCase().trim()=="baby kids"}");
-          switch (category.toLowerCase()) {
-            case 'wedding collection':
-              bucketName = 'wedding_bucket';
-              tableName = 'wedding_table';
-              break;
-            case 'single photo frame':
-              bucketName = 'single_photo_bucket';
-              tableName = 'single_photo_table';
-              break;
-            case 'group photo frame':
-              bucketName = 'group_photo_bucket';
-              tableName = 'group_photo_table';
-              break;
-            case 'couple frame':
-              bucketName = 'couple_frame_bucket';
-              tableName = 'couple_frame_table';
-              break;
-            case 'baby kids':
-              bucketName = 'baby_kid_bucket';
-              tableName = 'baby_kids_table';
-              break;
-            default:
-              bucketName = 'photos_bucket';
-              tableName = 'photos';
-          }
+          bucketName = 'wedding_bucket';
+          tableName = 'wedding_table';
 
           List<String?> imageUrls = [null, null, null];
 

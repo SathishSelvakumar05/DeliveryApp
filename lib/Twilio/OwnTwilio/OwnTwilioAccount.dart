@@ -17,12 +17,12 @@ class _MyTwilioScreenState extends State<MyTwilioScreen> {
   // late TwilioFlutter twilioFlutter;
 
   final TextEditingController numberController =
-  TextEditingController(text: "+919585394516");
+  TextEditingController(text: "+918870388517");
   final TextEditingController messageController =
-  TextEditingController(text: "வணக்கம்! இது ஒரு சோதனை அழைப்பு."); // Default Tamil message
+  TextEditingController(text: "This is from Delivery App. Your order is delivered today at 6 PM."); // Default Tamil message
 
   // Supported languages (Twilio <Say> language codes)
-  String selectedLanguage = "ta-IN"; // Default Tamil
+  String selectedLanguage = "hi-IN"; // Default Tamil
   final Map<String, String> languages = {
     // "English (US)": "en-US",
     "Tamil (India)": "ta-IN",
@@ -56,7 +56,7 @@ class _MyTwilioScreenState extends State<MyTwilioScreen> {
   Future<void> makeWhatsappCall() async {
     // WhatsApp
     await twilioService.sendWhatsApp(
-      to: "+919585394516",
+      to: numberController.text,
       message: "${messageController.text}",
     );
   }

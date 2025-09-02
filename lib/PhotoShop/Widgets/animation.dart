@@ -1,12 +1,14 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 import 'package:http/http.dart' as http;
 import 'package:share_plus/share_plus.dart';
 
@@ -16,7 +18,7 @@ class PhotographerScreen extends StatefulWidget {
   final String image1;
   final String? image2;
   final String? image3;
-
+  final bool? isAutoMove;
   const PhotographerScreen({
     super.key,
     required this.price,
@@ -24,6 +26,7 @@ class PhotographerScreen extends StatefulWidget {
     required this.image1,
     this.image2,
     this.image3,
+    this.isAutoMove=true
   });
 
   @override
@@ -52,9 +55,9 @@ class _PhotographerScreenState extends State<PhotographerScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        title: const Text(
-          "Photoshoot Package",
-          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+        title:  Text(
+          "Product Details",
+          style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20.sp),
         ),
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.black87),
@@ -65,8 +68,8 @@ class _PhotographerScreenState extends State<PhotographerScreen> {
           // Carousel with dots
           CarouselSlider(
             options: CarouselOptions(
-              height: 240.h,
-              autoPlay: true,
+              height: 540.h,
+              autoPlay: widget.isAutoMove??false,
               enlargeCenterPage: true,
               viewportFraction: 0.95,
               onPageChanged: (index, reason) {
@@ -78,11 +81,28 @@ class _PhotographerScreenState extends State<PhotographerScreen> {
             items: images.map((url) {
               return ClipRRect(
                 borderRadius: BorderRadius.circular(16.r),
-                child: Image.network(
-                  url,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
+                child:  PhotoView(enableRotation: true,
+                  backgroundDecoration: const BoxDecoration(color: Colors.transparent),
+                  minScale: PhotoViewComputedScale.contained,
+                  maxScale: PhotoViewComputedScale.covered * 3, // up to 3x zoom
+                  imageProvider: CachedNetworkImageProvider(url),
+                  loadingBuilder: (context, event) => const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                  errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.error, color: Colors.red),
                 ),
+                // CachedNetworkImage(
+                //   imageUrl: url,
+                //   // height: 120.h,
+                //   width: double.infinity,
+                //   fit: BoxFit.scaleDown,
+                //   placeholder: (context, url) => Center(
+                //     child: CircularProgressIndicator(strokeWidth: 2),
+                //   ),
+                //   errorWidget: (context, url, error) => Icon(Icons.error, color: Colors.red),
+                // ),
+
               );
             }).toList(),
           ),
@@ -142,7 +162,7 @@ class _PhotographerScreenState extends State<PhotographerScreen> {
                   child: actionIcon(Iconsax.message, "Message")),
               GestureDetector(
                 onTap: (){
-                  callNumber("+919595394516");
+                  callNumber("+919345867913");
 
                 },
                   child: actionIcon(Iconsax.call, "Call")),
@@ -172,14 +192,20 @@ class _PhotographerScreenState extends State<PhotographerScreen> {
 
       // Friendly customer message
       final message = """
-Hello,  
-I’m interested in this product.  
-
-📌 Price: ${widget.price?? "N/A"}  
-📝 Description: ${widget.description ?? ""}  
-
-Can you please confirm availability and details?  
+🎨 Turn your photos into masterpieces – only on Vfz APP!  
+Download now: https://play.google.com/store/apps/details?id=com.yourapp
+ 
 """;
+      // Friendly customer message
+//       final message = """
+// Hello,
+// I’m interested in this product.
+//
+// 📌 Price: ${widget.price?? "N/A"}
+// 📝 Description: ${widget.description ?? ""}
+//
+// Can you please confirm availability and details?
+// """;
 
       // Share image + message
       await Share.shareXFiles(

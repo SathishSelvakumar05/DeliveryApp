@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -15,6 +16,7 @@ import '../../PhotoShop/Cubit/wedding_cubit.dart';
 import '../../PhotoShop/Screen/UploadMultiImage.dart';
 import '../../PhotoShop/Screen/single_photo_screen.dart';
 import '../../PhotoShop/Widgets/CarouselSlider.dart';
+import '../../PhotoShop/Widgets/SingleProduct.dart';
 import '../../PhotoShop/Widgets/animation.dart';
 import '../../main.dart';
 
@@ -28,18 +30,8 @@ class TryDashboard extends StatefulWidget {
 class _TryDashboardState extends State<TryDashboard> {
   String userName = '';
   String photoUrl = '';
-  final supabase = Supabase.instance.client;
-  List<dynamic> _photos = [];
-  bool _loading = true;
 
-  Future<void> _fetchPhotos() async {
-   await context.read<WeddingCubit>().fetchWeddingPhotos();
-   await context.read<KidsCubit>().fetchKidsPhotos();
-   await context.read<CoupleCubit>().fetchCouplePhotos();
-   await context.read<SingleCubit>().fetchSinglePhotos();
-   await context.read<GroupCubit>().fetchGroupPhoto();
-   await context.read<OfferCubit>().fetchOffersPhotos();
-  }
+
 
   @override
   void initState() {
@@ -50,7 +42,6 @@ class _TryDashboardState extends State<TryDashboard> {
     print("skkkkkkkkk");
     print("${userName}");
     print("${photoUrl}");
-    _fetchPhotos();
   }
 
   @override
@@ -58,13 +49,12 @@ class _TryDashboardState extends State<TryDashboard> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding:  EdgeInsets.all(16.r),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Location & Profile Row
-              Row(
+        child: Column(
+          children: [
+            // Location & Profile Row
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
                 children: [
                   Container(
                     height: 40.h,
@@ -85,461 +75,179 @@ class _TryDashboardState extends State<TryDashboard> {
                     "${userName}",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
-                    Spacer(),
-                  OpenContainer(
-                    closedElevation: 0,
-                    transitionType: ContainerTransitionType.fade,
-                    transitionDuration: const Duration(milliseconds: 500),
-                    closedBuilder: (context, action) {
-                      return  Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        child: CircleAvatar(
-                          radius: 20.sp,
-                          backgroundColor: Colors.pink.shade400,
-                          child: Icon(
-                            Icons.add,
-                            color: Colors.white,
-                            size: 22,
-                          ),
-                        ),
-                      );
-                    },
-                    openBuilder: (context, action) {
-                      return const UploadMultiImage();
-                    },
-                  ),
-
-                ],
-              ),
-              const SizedBox(height: 16),
-
-              // Search Box
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const TextField(
-                  decoration: InputDecoration(
-                    icon: Icon(Iconsax.search_normal),
-                    hintText: "Search",
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Upcoming Schedule
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Trending Offers",
-                      style: TextStyle(
-                          fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                ],
-              ),
-               SizedBox(height: 10.h),
-              BlocBuilder<OfferCubit, OfferState>(
-                builder: (context, state) {
-                  if (state.isOfferLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state.isOfferData!.isEmpty) {
-                    return const Center(child: Text("No Offers Available"));
-                  }
-
-                  final lastOffer = state.isOfferData!.last;
-
-                  // Collect only non-empty image URLs
-                  final imageUrls = [
-                    lastOffer.image1,
-                    lastOffer.image2,
-                    lastOffer.image3,
-                  ].where((img) => img != null && img.trim().isNotEmpty).toList();
-
-                  if (imageUrls.isEmpty) {
-                    return const Center(child: Text("No Images Available"));
-                  }
-
-                  return ImageCarousel(
-                    imageUrls: imageUrls,
-                  );
-                },
-              ),
-              //
-              // SizedBox(height: 10.h),
-              // Container(
-              //   padding: const EdgeInsets.all(14).r,
-              //   decoration: BoxDecoration(
-              //     color: Color(0xFF0C1D37),
-              //     borderRadius: BorderRadius.circular(16).r,
-              //   ),
-              //   child: Row(
-              //     children: [
-              //       Container(
-              //         height: 50.h,
-              //         width: 50.w,
-              //         decoration: const BoxDecoration(
-              //           color: Colors.white,
-              //           shape: BoxShape.circle,
-              //         ),
-              //         child: const Icon(Iconsax.user, color: Colors.blue),
-              //       ),
-              //        SizedBox(width: 12.w),
-              //       Expanded(
-              //         child: Column(
-              //           crossAxisAlignment: CrossAxisAlignment.start,
-              //           children: const [
-              //             Text("S. Ram Kumar",
-              //                 style: TextStyle(
-              //                     color: Colors.white,
-              //                     fontWeight: FontWeight.bold)),
-              //             Text("VFX Editor",
-              //                 style: TextStyle(color: Colors.white70)),
-              //           ],
-              //         ),
-              //       ),
-              //       Column(
-              //         children: const [
-              //           Text("Monday to Saturday",
-              //               style: TextStyle(color: Colors.white)),
-              //           Text("9 AM - 10 PM",
-              //               style: TextStyle(color: Colors.white70)),
-              //         ],
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              const SizedBox(height: 20),
-
-              // // Doctor Speciality
-              // const Text("Doctor Speciality",
-              //     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              // const SizedBox(height: 10),
-              // SizedBox(
-              //   height: 80,
-              //   child: ListView(
-              //     scrollDirection: Axis.horizontal,
-              //     children: [
-              //       specialityItem(Iconsax.user, "Dentist"),
-              //       specialityItem(Iconsax.heart, "Cardiologist"),
-              //       specialityItem(Iconsax.activity, "Orthopedic"),
-              //       specialityItem(Iconsax.eye, "Neurologist"),
-              //     ],
-              //   ),
-              // ),
-              // const SizedBox(height: 20),
-
-              // Nearby Hospitals
-              Row(
-                children: [
-                  Text("Wedding Collections",
-                      style: TextStyle(
-                          fontSize: 15.sp, fontWeight: FontWeight.bold)),
                   Spacer(),
-                  TextButton(
-                      onPressed: () {
-                        final WeddingData=context.read<WeddingCubit>().state.weddingdata??[];
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SinglePhotoScreen(title:"Wedding",passedData: WeddingData,),
-                            ));
-                      },
-                      child: Text(
-                        "View more",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15.sp,
-                            color: Color(0xFF0C1D37)),
-                      ))
-                ],
-              ),
-              const SizedBox(height: 10),
-              BlocBuilder<WeddingCubit, WeddingState>(
-                builder: (context, state) {
-                  if (state.isWeddingLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  else if (state.weddingdata!.isNotEmpty) {
-                    return SizedBox(
-                      height: 110.h,
-                      child: ListView.builder(
-                        itemCount: state.weddingdata!.length,
-                        itemBuilder: (context, index) {
-                          final photos = state.weddingdata![index];
-                          final price = photos.price;
-                          final imageUrl = photos.image1;
-                          final desc = photos.description;
-                          return hospitalCard(
-                            price: price,
-                            imageUrl: imageUrl,
-                            description: desc,
-                          );
-                        },
-                        scrollDirection: Axis.horizontal,
-                      ),
-                    );
-                  }
-                  else {
-                    return const Center(
-                      child: Text("Not available"),
-                    );
-                  }
-                },
-              ),
-              const SizedBox(height: 10),
-
-              const SizedBox(height: 10),
-
-
-              // Nearby Hospitals
-              Row(
-                children: [
-                  Text("Kids Collections",
-                      style: TextStyle(
-                          fontSize: 15.sp, fontWeight: FontWeight.bold)),
-                  Spacer(),
-                  TextButton(
-                      onPressed: () {
-                        final kidsData=context.read<KidsCubit>().state.kidsData??[];
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SinglePhotoScreen(title:"Kids",passedData: kidsData,),
-                            ));
-                      },
-                      child: Text(
-                        "View more",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15.sp,
-                            color: Color(0xFF0C1D37)),
-                      ))
-                ],
-              ),
-              const SizedBox(height: 10),
-              BlocBuilder<KidsCubit, KidsState>(
-                builder: (context, state) {
-                  if (state.isKidsLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  else if (state.kidsData!.isNotEmpty) {
-                    return SizedBox(
-                      height: 110.h,
-                      child: ListView.builder(
-                        itemCount: state.kidsData!.length,
-                        itemBuilder: (context, index) {
-                          final photos = state.kidsData![index];
-                          final price = photos.price;
-                          final imageUrl = photos.image1;
-                          final desc = photos.description;
-                          return hospitalCard(
-                            price: price,
-                            imageUrl: imageUrl,
-                            description: desc,
-                          );
-                        },
-                        scrollDirection: Axis.horizontal,
-                      ),
-                    );
-                  }
-                  else {
-                    return const Center(
-                      child: Text("Not available"),
-                    );
-                  }
-                },
-              ),
-              // Nearby Hospitals
-              Row(
-                children: [
-                  Text("Couple Collections",
-                      style: TextStyle(
-                          fontSize: 15.sp, fontWeight: FontWeight.bold)),
-                  Spacer(),
-                  TextButton(
-                      onPressed: () {
-                        final coupleData=context.read<CoupleCubit>().state.coupleData??[];
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SinglePhotoScreen(title:"Couple",passedData: coupleData,),
-                            ));
-                      },
-                      child: Text(
-                        "View more",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15.sp,
-                            color: Color(0xFF0C1D37)),
-                      ))
-                ],
-              ),
-              const SizedBox(height: 10),
-        BlocBuilder<CoupleCubit, CoupleState>(
-          builder: (context, state) {
-            if (state.isCoupleLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            else if (state.coupleData!.isNotEmpty) {
-              return SizedBox(
-                height: 110.h,
-                child: ListView.builder(
-                  itemCount: state.coupleData!.length,
-                  itemBuilder: (context, index) {
-                    final photos = state.coupleData![index];
-                    final price = photos.price;
-                    final imageUrl = photos.image1;
-                    final desc = photos.description;
-                    return hospitalCard(
-                      price: price,
-                      imageUrl: imageUrl,
-                      description: desc,
-                    );
-                  },
-                  scrollDirection: Axis.horizontal,
-                ),
-              );
-            }
-            else {
-              return const Center(
-                child: Text("Not available"),
-              );
-            }
+        GestureDetector(
+          onTap: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context) => UploadMultiImage(),));
           },
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20.0),
+            child: CircleAvatar(
+              radius: 20.sp,
+              backgroundColor: Colors.pink.shade400,
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 22,
               ),
-
-
-              Row(
-                children: [
-                  Text("Single Collections",
-                      style: TextStyle(
-                          fontSize: 15.sp, fontWeight: FontWeight.bold)),
-                  Spacer(),
-                  TextButton(
-                      onPressed: () {
-                        final singleData=context.read<SingleCubit>().state.singleData??[];
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SinglePhotoScreen(title:"Single",passedData: singleData,),
-                            ));
-                      },
-                      child: Text(
-                        "View more",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15.sp,
-                            color: Color(0xFF0C1D37)),
-                      ))
-                ],
-              ),
-              const SizedBox(height: 10),
-              BlocBuilder<SingleCubit, SingleState>(
-                builder: (context, state) {
-                  if (state.isSingleLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  else if (state.singleData!.isNotEmpty) {
-                    return SizedBox(
-                      height: 110.h,
-                      child: ListView.builder(
-                        itemCount: state.singleData!.length,
-                        itemBuilder: (context, index) {
-                          final photos = state.singleData![index];
-                          final price = photos.price;
-                          final imageUrl = photos.image1;
-                          final desc = photos.description;
-                          return hospitalCard(
-                            price: price,
-                            imageUrl: imageUrl,
-                            description: desc,
-                          );
-                        },
-                        scrollDirection: Axis.horizontal,
-                      ),
-                    );
-                  }
-                  else {
-                    return const Center(
-                      child: Text("Not available"),
-                    );
-                  }
-                },
-              ),
-
-              Row(
-                children: [
-                  Text("Group Collections",
-                      style: TextStyle(
-                          fontSize: 15.sp, fontWeight: FontWeight.bold)),
-                  Spacer(),
-                  TextButton(
-                      onPressed: () {
-                        final groupData=context.read<GroupCubit>().state.isGroupData??[];
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SinglePhotoScreen(title:"Group",passedData: groupData,),
-                            ));
-                      },
-                      child: Text(
-                        "View more",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15.sp,
-                            color: Color(0xFF0C1D37)),
-                      ))
-                ],
-              ),
-              const SizedBox(height: 10),
-              BlocBuilder<GroupCubit, GroupState>(
-                builder: (context, state) {
-                  if (state.isGroupLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  else if (state.isGroupData!.isNotEmpty) {
-                    return SizedBox(
-                      height: 110.h,
-                      child: ListView.builder(
-                        itemCount: state.isGroupData!.length,
-                        itemBuilder: (context, index) {
-                          final photos = state.isGroupData![index];
-                          final price = photos.price;
-                          final imageUrl = photos.image1;
-                          final desc = photos.description;
-                          return hospitalCard(
-                            price: price,
-                            imageUrl: imageUrl,
-                            description: desc,
-                          );
-                        },
-                        scrollDirection: Axis.horizontal,
-                      ),
-                    );
-                  }
-                  else {
-                    return const Center(
-                      child: Text("Not available"),
-                    );
-                  }
-                },
-              ),
-
-
-            ],
+            ),
           ),
+        )
+                ],
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                padding: EdgeInsets.all(16.r),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
+
+                    // Search Box
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const TextField(
+                        decoration: InputDecoration(
+                          icon: Icon(Iconsax.search_normal),
+                          hintText: "Search",
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Upcoming Schedule
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Trending Offers",
+                            style: TextStyle(
+                                fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                    SizedBox(height: 10.h),
+                    BlocBuilder<OfferCubit, OfferState>(
+                      builder: (context, state) {
+                        if (state.isOfferLoading) {
+                          return const Center(child: CircularProgressIndicator());
+                        } else if (state.isOfferData!.isEmpty) {
+                          return const Center(child: Text("No Offers Available"));
+                        }
+
+                        final lastOffer = state.isOfferData!.last;
+
+                        // Collect only non-empty image URLs
+                        final imageUrls = [
+                          lastOffer.image1,
+                          lastOffer.image2,
+                          lastOffer.image3,
+                        ]
+                            .where((img) => img != null && img.trim().isNotEmpty)
+                            .toList();
+
+                        if (imageUrls.isEmpty) {
+                          return const Center(child: Text("No Images Available"));
+                        }
+
+                        return ImageCarousel(
+                          imageUrls: imageUrls,
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 20),
+
+                    Row(
+                      children: [
+                        Text("OverAll Collections",
+                            style: TextStyle(
+                                fontSize: 15.sp, fontWeight: FontWeight.bold)),
+                        Spacer(),
+
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    BlocBuilder<WeddingCubit, WeddingState>(
+                      builder: (context, state) {
+                        if (state.isWeddingLoading) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (state.weddingdata!.isNotEmpty) {
+                          return SizedBox(
+                            //height: 110.h,
+                            child: GridView.builder(
+                              padding: EdgeInsets.all(6).r,
+                              shrinkWrap: true,
+                              physics: const BouncingScrollPhysics(), // smooth scroll
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2, // 2 cards per row
+                                mainAxisSpacing: 12, // vertical spacing
+                                crossAxisSpacing: 12, // horizontal spacing
+                                childAspectRatio: 0.75, // control card height
+                              ),
+                              itemCount: state.weddingdata!.length,
+                              itemBuilder: (context, index) {
+                                final photos = state.weddingdata![index];
+                                final price = photos.price;
+                                final imageUrl = photos.image1;
+                                final desc = photos.description;
+                                bool isEven = index % 2 == 0;
+                                return GestureDetector(
+                                  onTap: () {
+                                    print("1111");
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => PhotographerScreen(
+                                            price: price,
+                                            description: desc,
+                                            image1: imageUrl,
+                                            image2: photos.image2,
+                                            image3: photos.image3,
+                                            isAutoMove: false,
+                                          ),
+                                        ));
+                                  },
+                                  child: AnimationConfiguration.staggeredList(
+                                      position: index,
+                                      delay: const Duration(milliseconds: 300),
+                                      child: SlideAnimation(
+                                          horizontalOffset: isEven
+                                              ? -50.0
+                                              : 50.0, // Direction based on index
+                                          duration:
+                                              const Duration(milliseconds: 1000),
+                                          curve: Curves.easeOut,
+                                          child: FoodCard(
+                                            // onTap: () {},
+                                            title: desc,
+                                            price: price,
+                                            imageUrl: imageUrl,
+                                          ))
+
+                                      ),
+                                );
+                              },
+                            ),
+                          );
+                        } else {
+                          return const Center(
+                            child: Text("Not available"),
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -566,7 +274,10 @@ class _TryDashboardState extends State<TryDashboard> {
     );
   }
 
-  Widget hospitalCard({required String price,required String imageUrl,required String description}) {
+  Widget hospitalCard(
+      {required String price,
+      required String imageUrl,
+      required String description}) {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Container(
@@ -643,12 +354,9 @@ class _TryDashboardState extends State<TryDashboard> {
                 ],
               ),
             ),
-
           ],
         ),
       ),
     );
   }
 }
-
-
