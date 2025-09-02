@@ -475,6 +475,8 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
             imageUrls[i] = publicUrl;
           }
 
+
+
           // Insert into Supabase table
           await supabase.from(tableName).insert({
             'price': formData['price'].toString(),
