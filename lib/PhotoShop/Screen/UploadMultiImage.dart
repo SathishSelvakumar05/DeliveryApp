@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:delivery_app/PhotoShop/Screen/single_photo_screen.dart';
 import 'package:delivery_app/PhotoShop/Screen/view_all_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -14,6 +15,7 @@ import '../../Components/Textfield/CustomTextField.dart';
 import '../../CustomerScreen/CustomerDashboard/CustomerDashboardScreen.dart';
 import '../../Utils/Constants/ColorConstants.dart';
 import '../../Utils/Constants/TextStyles.dart';
+import '../Cubit/wedding_cubit.dart';
 import '../Widgets/CustomSwticher.dart';
 import '../Widgets/PickerComponent.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -425,6 +427,7 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
           });
 
           showSuccessToast("Offers Uploaded Successfully");
+          context.read<WeddingCubit>().fetchWeddingPhotos();
           _formKey.currentState?.reset();
           setState(() => _selectedImages = []);
           Navigator.pop(context,true);
@@ -487,6 +490,8 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
           });
 
           showSuccessToast("Uploaded Successfully");
+          context.read<WeddingCubit>().fetchWeddingPhotos();
+
           _formKey.currentState?.reset();
           setState(() => _selectedImages = []);
           Navigator.pop(context,true);

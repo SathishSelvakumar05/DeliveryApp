@@ -9,20 +9,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../Components/CommonFunctions.dart';
 import '../Components/CustomToast/CustomToast.dart';
 import '../CustomerScreen/CustomerDashboard/CustomerDashboard.dart';
-import '../Firebase/LocalNotification/LocalNotification.dart';
-import '../GuruTasks/DistanceCalculator/WalkTrackerScreen.dart';
-import '../LanguageChanger/Tamil2English.dart';
 import '../PhotoShop/FireStores/FireBaseStores.dart';
 import '../PhotoShop/FirebaseLogin/FirebaseAuth.dart';
 import '../PhotoShop/Model/UserListModel.dart';
-import '../Profile/profile_screen.dart';
-import '../ShareApp/PdfScreen.dart';
-import '../ShareInternet/ShareEmailScreen.dart';
-import '../SoundPlay/AudioPlayScreen.dart';
-import '../Twilio/TwilioScreen.dart';
-import 'RegisterScreen/AddRegister.dart';
-import 'RegisterScreen/FireBaseSignup.dart';
-import 'RegisterScreen/MobileNumberLogin.dart';
+
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
   @override
@@ -88,44 +78,15 @@ class _LoginFormState extends State<LoginForm> {
               buttonColor: Color(0xFF0C1D37),
               onTap: () {
                 _isSigningIn?null: loginFunction();
-                //Navigator.push(context, MaterialPageRoute(builder: (context) =>SettingsScreen() ,));
-                // Navigator.push(context, MaterialPageRoute(builder: (context) =>WalkTrackerScreen() ,));
-                // Navigator.push(context, MaterialPageRoute(builder: (context) =>DashboardScreen() ,));
-                // Navigator.push(context, MaterialPageRoute(builder: (context) =>FirebaeSignUpScreen() ,));
-                 //Navigator.push(context, MaterialPageRoute(builder: (context) =>MobileLoginScreen(Role: "Customer",) ,));
                 print('Customer tapped');
               },
               containerColor: Colors.white,
             ),
-            // buildStartButton(
-            //   title: 'Get Started with Delivery Partner',
-            //   buttonColor:Color(0xFF0C1D37),
-            //   onTap: () {
-            //    // Navigator.push(context, MaterialPageRoute(builder: (context) =>LocalnotificationScreen() ,));
-            //     Navigator.push(context, MaterialPageRoute(builder: (context) =>Twilioscreen() ,));
-            //     // Navigator.push(context, MaterialPageRoute(builder: (context) =>ShareEmailScreen() ,));
-            //     // Navigator.push(context, MaterialPageRoute(builder: (context) =>MobileLoginScreen(Role: "Delivery Agent",) ,));
-            //
-            //     print('Delivery tapped');
-            //   },
-            //   containerColor: Colors.grey.shade200,
-            // ),
-//             TextButton(onPressed: (){
-//               _shareApp();
-//
-//             }, child: Text('Share Your Friends')),
-//             TextButton(onPressed: (){
-// Navigator.push(context, MaterialPageRoute(builder: (context) => EmailPDFScreen(),));
-//             }, child: Text('Generate the PDF'))
 
           ],
         ),
       ),
     );
-  }
-  void _shareApp() {
-    Share.share(
-        "This Msg from Sathish App");
   }
 
   Widget buildStartButton({

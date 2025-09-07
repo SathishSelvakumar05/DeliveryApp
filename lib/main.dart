@@ -17,18 +17,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'AutoLogin.dart';
 import 'CommonCubit/NetworkScreen/MainScreen.dart';
-import 'CustomerScreen/DeliveryScreen/Cubit/add_delivery_cubit.dart';
 import 'Firebase/PushNotification/PushNotification.dart';
-import 'LoginScreen/Cubit/add_user_cubit.dart';
-import 'LoginScreen/LoginForm.dart';
 import 'PhotoShop/Cubit/CoupleCubit/couple_cubit.dart';
 import 'PhotoShop/Cubit/wedding_cubit.dart';
-import 'RBAC/cubit/permission_cubit.dart';
-import 'Twilio/Cubit/twilio_cubit.dart';
-import 'Twilio/DiseasDetectionAI/AIDetection Screen.dart';
-import 'Twilio/OpenAI.dart';
-import 'Twilio/chat_dialog_flow/MainChatScreen.dart';
-import 'Twilio/mainLearnScreeb.dart';
 import 'firebase_options.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -140,14 +131,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return  MultiBlocProvider(
       providers: [
-        BlocProvider<PermissionCubit>(create: (context)=>PermissionCubit()),
-        BlocProvider<AddUserCubit>(
-          create: (context) => AddUserCubit(),
-        ),
-        BlocProvider<DeliveryCubit>(
-          create: (context) => DeliveryCubit(),
-        ),
-        BlocProvider<TwilioCubit>(create: (context)=>TwilioCubit(),),
 
         BlocProvider<WeddingCubit>(create: (context)=>WeddingCubit()..fetchWeddingPhotos(),),
         BlocProvider<CoupleCubit>(create: (context)=>CoupleCubit()..fetchCouplePhotos(),),

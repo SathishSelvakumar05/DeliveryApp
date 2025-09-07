@@ -1,22 +1,12 @@
-import 'package:delivery_app/CustomerScreen/customer_share_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:local_auth/local_auth.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:remixicon/remixicon.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sidebarx/sidebarx.dart';
-import '../../Components/Widgets/NoInternetScreen.dart';
-import '../../LoginScreen/Cubit/add_user_cubit.dart';
 import '../../PhotoShop/Cubit/wedding_cubit.dart';
-import '../../PhotoShop/Screen/single_photo_screen.dart';
 import '../CustomerProfileScreen/Presentation/CustomerProfile.dart';
-import '../DeliveryScreen/Presentation/AddDeliveryTabs.dart';
-import '../DeliveryScreen/Presentation/DeliveryScreen.dart';
 import 'CustomerDashboardScreen.dart';
 class DashboardScreen extends StatefulWidget {
   static const routeName = "/DashBoard";
@@ -34,8 +24,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     _bottomNavIndex=0;
     // TODO: implement initState
-    // _initializeBottomNavIndex();
-    //getInitialData();
     super.initState();
     context.read<WeddingCubit>().fetchWeddingPhotos();
 
@@ -48,14 +36,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     Iconsax.dcube,
     Iconsax.category,
   ];
-  // final autoSizeGroup = AutoSizeGroup();
-  final _controller = SidebarXController(selectedIndex: 0, extended: true);
+
 
 
 
   Widget build(BuildContext context) {
     return  Scaffold(
-
         key: _scaffoldKey,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         extendBody: true,

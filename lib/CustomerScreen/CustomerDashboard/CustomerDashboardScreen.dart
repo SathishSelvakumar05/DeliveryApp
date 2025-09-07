@@ -12,6 +12,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../Components/AppBarComponents.dart';
 import '../../PhotoShop/Cubit/wedding_cubit.dart';
 import '../../PhotoShop/Screen/UploadMultiImage.dart';
 import '../../PhotoShop/Screen/single_photo_screen.dart';
@@ -30,72 +31,91 @@ class TryDashboard extends StatefulWidget {
 class _TryDashboardState extends State<TryDashboard> {
   String userName = '';
   String photoUrl = '';
-
+bool isPermission=false;
 
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    userName = auth.currentUser?.displayName ?? "";
-    photoUrl = auth.currentUser?.photoURL ?? "";
+    // checkPermission();
+    // userName = auth.currentUser?.displayName ?? "";
+    // photoUrl = auth.currentUser?.photoURL ?? "";
     print("skkkkkkkkk");
     print("${userName}");
     print("${photoUrl}");
   }
+//   checkPermission()async{
+//     isPermission=await auth.currentUser?.email=="sathishkumar."
+// }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: CommonAppBarWidget(
+        titleText: "",
+        isAppBarTitleWidgetNeed: true,isBackButtonNeeded: false,
+        appBarTitle:  Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Container(
+                height: 40.h,
+                width: 40.w,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.blue, // background color
+                ),
+                child: ClipOval(
+                  child: Image.asset(
+                    "assets/images/logo.jpg",
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SizedBox(width: 10.w),
+              Text(
+                "VFX Advertisement",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              ),
+              Spacer(),
+              GestureDetector(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => UploadMultiImage(),));
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: CircleAvatar(
+                    radius: 20.sp,
+                    backgroundColor: Colors.pink.shade400,
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      size: 22,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+        // Row(
+        //   children: [
+        //     CircleAvatar(
+        //       backgroundColor: Colors.white,
+        //       child: Icon(Icons.person, color: Colors.pinkAccent),
+        //     ),
+        //     SizedBox(width: 28.w),
+        //     Text("Profile", style: TextStyle(color: Colors.white, fontSize: 18)),
+        //   ],
+        // ),
+      ),
       body: SafeArea(
         child: Column(
           children: [
             // Location & Profile Row
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Container(
-                    height: 40.h,
-                    width: 40.w,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.blue, // background color
-                    ),
-                    child: ClipOval(
-                      child: Image.network(
-                        photoUrl,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10.w),
-                  Text(
-                    "${userName}",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
-                  Spacer(),
-        GestureDetector(
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => UploadMultiImage(),));
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0),
-            child: CircleAvatar(
-              radius: 20.sp,
-              backgroundColor: Colors.pink.shade400,
-              child: Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 22,
-              ),
-            ),
-          ),
-        )
-                ],
-              ),
-            ),
+
             Expanded(
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
@@ -104,23 +124,23 @@ class _TryDashboardState extends State<TryDashboard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
 
-
-                    // Search Box
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const TextField(
-                        decoration: InputDecoration(
-                          icon: Icon(Iconsax.search_normal),
-                          hintText: "Search",
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
+                    //
+                    // // Search Box
+                    // Container(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 12),
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.grey.shade200,
+                    //     borderRadius: BorderRadius.circular(12),
+                    //   ),
+                    //   child: const TextField(
+                    //     decoration: InputDecoration(
+                    //       icon: Icon(Iconsax.search_normal),
+                    //       hintText: "Search",
+                    //       border: InputBorder.none,
+                    //     ),
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 16),
 
                     // Upcoming Schedule
                     Row(
@@ -199,21 +219,56 @@ class _TryDashboardState extends State<TryDashboard> {
                                 final desc = photos.description;
                                 bool isEven = index % 2 == 0;
                                 return GestureDetector(
-                                  onTap: () {
-                                    print("1111");
-                                    Navigator.push(
+                                    onTap: () {
+                                      Navigator.push(
                                         context,
-                                        MaterialPageRoute(
-                                          builder: (context) => PhotographerScreen(
-                                            price: price,
-                                            description: desc,
-                                            image1: imageUrl,
-                                            image2: photos.image2,
-                                            image3: photos.image3,
-                                            isAutoMove: false,
-                                          ),
-                                        ));
-                                  },
+                                        PageRouteBuilder(
+                                          transitionDuration: const Duration(milliseconds: 400),
+                                          pageBuilder: (context, animation, secondaryAnimation) =>
+                                              PhotographerScreen(
+                                                price: price,
+                                                description: desc,
+                                                image1: imageUrl,
+                                                image2: photos.image2,
+                                                image3: photos.image3,
+                                                isAutoMove: false,
+                                              ),
+                                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                            final offsetAnimation = Tween<Offset>(
+                                              begin: const Offset(0.1, 0), // slight right
+                                              end: Offset.zero,
+                                            ).animate(animation);
+
+                                            final fadeAnimation = CurvedAnimation(
+                                              parent: animation,
+                                              curve: Curves.easeInOut,
+                                            );
+
+                                            return SlideTransition(
+                                              position: offsetAnimation,
+                                              child: FadeTransition(
+                                                opacity: fadeAnimation,
+                                                child: child,
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    // onTap: () {
+                                  //   Navigator.push(
+                                  //       context,
+                                  //       MaterialPageRoute(
+                                  //         builder: (context) => PhotographerScreen(
+                                  //           price: price,
+                                  //           description: desc,
+                                  //           image1: imageUrl,
+                                  //           image2: photos.image2,
+                                  //           image3: photos.image3,
+                                  //           isAutoMove: false,
+                                  //         ),
+                                  //       ));
+                                  // },
                                   child: AnimationConfiguration.staggeredList(
                                       position: index,
                                       delay: const Duration(milliseconds: 300),
