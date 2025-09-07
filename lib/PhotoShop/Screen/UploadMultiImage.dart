@@ -483,7 +483,7 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
           // Insert into Supabase table
           await supabase.from(tableName).insert({
             'price': formData['price'].toString(),
-            'description': formData['description'].toString(),
+            'description': formData['description'].toString().toLowerCase(),
             'image1': imageUrls[0],
             'image2': imageUrls[1],
             'image3': imageUrls[2],

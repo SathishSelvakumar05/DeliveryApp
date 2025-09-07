@@ -26,16 +26,18 @@ class _AuoLoginScreenState extends State<AuoLoginScreen> {
     final username = localDb.getString("username");
     final uuid = localDb.getString("uuid");
     if (username != null && uuid != null) {
+       //Navigator.pushAndRemoveUntil(
+
        Navigator.pushAndRemoveUntil(
          context,MaterialPageRoute(builder: (context) => DashboardScreen(),),(route) => false,);
       showSuccessToast(
           "${capitalizeFirstLetter(username)} is Successfully Login");
     } else {
-      Navigator.pushAndRemoveUntil(
-       context,MaterialPageRoute(builder: (context) => DashboardScreen(),),(route) => false,);
-
       // Navigator.pushAndRemoveUntil(
-        // context,MaterialPageRoute(builder: (context) => LoginForm(),),(route) => false,);
+       // context,MaterialPageRoute(builder: (context) => DashboardScreen(),),(route) => false,);
+
+       Navigator.pushAndRemoveUntil(
+        context,MaterialPageRoute(builder: (context) => LoginForm(),),(route) => false,);
 
     }
 

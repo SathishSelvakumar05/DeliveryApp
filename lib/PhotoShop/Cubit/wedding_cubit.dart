@@ -30,4 +30,26 @@ class WeddingCubit extends Cubit<WeddingState> {
     }}
 
 
+  /// Filter wedding photos by description
+  Future<void> filterByData(String search) async {
+    try {
+      emit(WeddingState(isWeddingLoading: true, weddingdata: []));
+
+      final response = await SupaBase.from('wedding_table')
+          .select()
+          .ilike('description', '%$search%');
+
+      final weddingData = (response as List)
+          .map((e) => TableModel.fromMap(e))
+          .toList();
+
+      emit(WeddingState(isWeddingLoading: false, weddingdata: weddingData));
+      // showErrorToast("Filtered data fetched");
+    } catch (e) {
+      showErrorToast("Failed to filter wedding data");
+      emit(WeddingState(isWeddingLoading: false, weddingdata: []));
+    }
+  }
+
+
 }

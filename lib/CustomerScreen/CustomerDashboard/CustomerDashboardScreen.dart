@@ -124,25 +124,28 @@ bool isPermission=false;
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
 
-                    //
-                    // // Search Box
-                    // Container(
-                    //   padding: const EdgeInsets.symmetric(horizontal: 12),
-                    //   decoration: BoxDecoration(
-                    //     color: Colors.grey.shade200,
-                    //     borderRadius: BorderRadius.circular(12),
-                    //   ),
-                    //   child: const TextField(
-                    //     decoration: InputDecoration(
-                    //       icon: Icon(Iconsax.search_normal),
-                    //       hintText: "Search",
-                    //       border: InputBorder.none,
-                    //     ),
-                    //   ),
-                    // ),
-                    // const SizedBox(height: 16),
 
-                    // Upcoming Schedule
+                    // Search Box
+                    Container(
+                      padding:  EdgeInsets.symmetric(horizontal: 12).r,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child:  TextField(
+                        decoration: InputDecoration(
+                          icon: Icon(Iconsax.search_normal),
+                          hintText: "Search",
+                          border: InputBorder.none,
+                        ),
+                        onChanged: (val){
+                          context.read<WeddingCubit>().filterByData(val.toLowerCase());
+                        },
+
+                      ),
+                    ),
+                     SizedBox(height: 16.h),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
