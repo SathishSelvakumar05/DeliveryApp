@@ -19,7 +19,7 @@ class _MyTwilioScreenState extends State<MyTwilioScreen> {
   final TextEditingController numberController =
   TextEditingController(text: "+919585394516");
   final TextEditingController messageController =
-  TextEditingController(text: "வணக்கம்! இது ஒரு சோதனை அழைப்பு."); // Default Tamil message
+  TextEditingController(text: "Hello. your order will be delivered within today"); // Default Tamil message
 
   // Supported languages (Twilio <Say> language codes)
   String selectedLanguage = "ta-IN"; // Default Tamil
@@ -87,7 +87,6 @@ class _MyTwilioScreenState extends State<MyTwilioScreen> {
                   keyboardType: TextInputType.phone,
                 ),
                 SizedBox(height: 16),
-
                 // Message input
                 TextFormField(
                   controller: messageController,
