@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../Components/CommonFunctions.dart';
 import '../Components/CustomToast/CustomToast.dart';
 import '../CustomerScreen/CustomerDashboard/CustomerDashboard.dart';
+import '../CustomerScreen/CustomerDashboard/CustomerDashboardScreen.dart';
 import '../PhotoShop/FireStores/FireBaseStores.dart';
 import '../PhotoShop/FirebaseLogin/FirebaseAuth.dart';
 import '../PhotoShop/Model/UserListModel.dart';
@@ -195,9 +196,14 @@ class _LoginFormState extends State<LoginForm> {
       if(user!=null){
         await Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => DashboardScreen(),),
+          MaterialPageRoute(builder: (context) => TryDashboard(),),
               (route) => false,
         );
+        // await Navigator.pushAndRemoveUntil(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => DashboardScreen(),),
+        //       (route) => false,
+        // );
       }else{
 
 print("okkk");

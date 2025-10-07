@@ -17,6 +17,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'AutoLogin.dart';
 import 'CommonCubit/NetworkScreen/MainScreen.dart';
+import 'Firebase/EmailAccess.dart';
 import 'Firebase/PushNotification/PushNotification.dart';
 import 'PhotoShop/Cubit/CoupleCubit/couple_cubit.dart';
 import 'PhotoShop/Cubit/wedding_cubit.dart';
@@ -74,6 +75,7 @@ void main() async{
   );
   // initialize firebase messaging
   await PushNotifications.init();
+  initRemoteConfig();
 
   // initialize local notifications
   // dont use local notifications for web platform

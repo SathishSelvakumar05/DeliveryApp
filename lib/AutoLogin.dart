@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'Components/CommonFunctions.dart';
 import 'Components/CustomToast/CustomToast.dart';
 import 'CustomerScreen/CustomerDashboard/CustomerDashboard.dart';
+import 'CustomerScreen/CustomerDashboard/CustomerDashboardScreen.dart';
 import 'LoginScreen/LoginForm.dart';
 
 class AuoLoginScreen extends StatefulWidget {
@@ -27,9 +28,11 @@ class _AuoLoginScreenState extends State<AuoLoginScreen> {
     final uuid = localDb.getString("uuid");
     if (username != null && uuid != null) {
        //Navigator.pushAndRemoveUntil(
+      Navigator.pushAndRemoveUntil(
+        context,MaterialPageRoute(builder: (context) => TryDashboard(),),(route) => false,);
 
-       Navigator.pushAndRemoveUntil(
-         context,MaterialPageRoute(builder: (context) => DashboardScreen(),),(route) => false,);
+       // Navigator.pushAndRemoveUntil(
+       //   context,MaterialPageRoute(builder: (context) => DashboardScreen(),),(route) => false,);
       showSuccessToast(
           "${capitalizeFirstLetter(username)} is Successfully Login");
     } else {

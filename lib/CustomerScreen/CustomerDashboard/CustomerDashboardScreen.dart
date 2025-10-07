@@ -13,6 +13,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../Components/AppBarComponents.dart';
+import '../../Firebase/EmailAccess.dart';
 import '../../PhotoShop/Cubit/wedding_cubit.dart';
 import '../../PhotoShop/Screen/UploadMultiImage.dart';
 import '../../PhotoShop/Screen/single_photo_screen.dart';
@@ -32,19 +33,41 @@ class _TryDashboardState extends State<TryDashboard> {
   String userName = '';
   String photoUrl = '';
 bool isPermission=false;
+String currentUserEmail='';
 
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    context.read<WeddingCubit>().fetchWeddingPhotos();
     // checkPermission();
     // userName = auth.currentUser?.displayName ?? "";
     // photoUrl = auth.currentUser?.photoURL ?? "";
+    fetchcurrentUserEmail();
     print("skkkkkkkkk");
     print("${userName}");
     print("${photoUrl}");
+
   }
+  fetchcurrentUserEmail()async{
+    currentUserEmail= await auth.currentUser?.email??"";
+    if(currentUserEmail.isNotEmpty){
+      bool allowed = await isEmailAllowed(currentUserEmail);
+
+      if (allowed) {
+        setState(() {
+          isPermission=true;
+        });
+        print("Email is allowed ✅");
+      } else {
+        setState(() {
+          isPermission=false;
+        });
+        print("Email is not allowed ❌");
+      }    }
+  }
+
 //   checkPermission()async{
 //     isPermission=await auth.currentUser?.email=="sathishkumar."
 // }
@@ -80,6 +103,7 @@ bool isPermission=false;
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
               Spacer(),
+             // if(isPermission)
               GestureDetector(
                 onTap: (){
                   Navigator.push(context, MaterialPageRoute(builder: (context) => UploadMultiImage(),));
@@ -126,41 +150,62 @@ bool isPermission=false;
 
 
                     // Search Box
-                    Container(
-                      padding:  EdgeInsets.symmetric(horizontal: 12).r,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child:  TextField(
-                        decoration: InputDecoration(
-                          icon: Icon(Iconsax.search_normal),
-                          hintText: "Search",
-                          border: InputBorder.none,
-                        ),
-                        onChanged: (val){
-                          context.read<WeddingCubit>().filterByData(val.toLowerCase());
-                        },
+                    Row(
+                      children: [
+                        Expanded(
+                          flex:8,
+                          child: Container(
+                            padding:  EdgeInsets.symmetric(horizontal: 12).r,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child:  TextField(
+                              decoration: InputDecoration(
+                                icon: Icon(Iconsax.search_normal),
+                                hintText: "Search",
+                                border: InputBorder.none,
+                              ),
+                              onChanged: (val){
+                                context.read<WeddingCubit>().filterByData(val.toLowerCase());
+                              },
 
-                      ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 5.w,),
+                        Expanded(
+                            flex: 1,
+                            child: GestureDetector(
+                              onTap: (){
+                                showModalBottomSheet(context: context, builder: (context) {
+                                  double start=12;
+                                  double end=112;
+                                  return _bottomSheetFilter(start: 10,end:200 );
+                                },);
+                              },
+                              child: Container(
+                                height: 43.h,
+                                width: double.infinity,
+                                  // padding:  EdgeInsets.symmetric(horizontal: 12).r,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade200,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Icon(Icons.filter_alt_sharp,size: 30.sp,color: Color(0xFF0C1D37),)),
+                            ))
+                      ],
                     ),
                      SizedBox(height: 16.h),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Trending Offers",
-                            style: TextStyle(
-                                fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                      ],
-                    ),
+
                     SizedBox(height: 10.h),
                     BlocBuilder<OfferCubit, OfferState>(
                       builder: (context, state) {
                         if (state.isOfferLoading) {
                           return const Center(child: CircularProgressIndicator());
                         } else if (state.isOfferData!.isEmpty) {
-                          return const Center(child: Text("No Offers Available"));
+                          return const SizedBox();
                         }
 
                         final lastOffer = state.isOfferData!.last;
@@ -175,11 +220,24 @@ bool isPermission=false;
                             .toList();
 
                         if (imageUrls.isEmpty) {
-                          return const Center(child: Text("No Images Available"));
+                          return const Center(child: Text("Not Available"));
                         }
 
-                        return ImageCarousel(
-                          imageUrls: imageUrls,
+                        return Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Trending Offers",
+                                    style: TextStyle(
+                                        fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                            SizedBox(height: 10.h,),
+                            ImageCarousel(
+                              imageUrls: imageUrls,
+                            ),
+                          ],
                         );
                       },
                     ),
@@ -194,7 +252,7 @@ bool isPermission=false;
 
                       ],
                     ),
-                    const SizedBox(height: 10),
+                     SizedBox(height: 10.h),
                     BlocBuilder<WeddingCubit, WeddingState>(
                       builder: (context, state) {
                         if (state.isWeddingLoading) {
@@ -330,6 +388,37 @@ bool isPermission=false;
         ],
       ),
     );
+  }
+  _bottomSheetFilter({required double start,required double end}){
+    return StatefulBuilder(
+        builder: (context, setState) {
+          return  Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              RangeSlider(
+                values: RangeValues(start, end),
+                labels: RangeLabels(start.toString(), end.toString()),
+                onChanged: (value) {
+                  setState(() {
+                    start = value.start;
+                    end = value.end;
+                  });
+                },
+                min: 10.0,
+                max: 2000.0,
+              ),
+              Text(
+                "Start: " +
+                    start.toStringAsFixed(2) +
+                    "\nEnd: " +
+                    end.toStringAsFixed(2),
+                style: const TextStyle(
+                  fontSize: 32.0,
+                ),
+              ),
+            ],
+          );
+        });
   }
 
   Widget hospitalCard(

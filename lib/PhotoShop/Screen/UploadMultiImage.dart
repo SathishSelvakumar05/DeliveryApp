@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:delivery_app/PhotoShop/Cubit/OfferCubit/offer_cubit.dart';
 import 'package:delivery_app/PhotoShop/Screen/single_photo_screen.dart';
 import 'package:delivery_app/PhotoShop/Screen/view_all_image.dart';
 import 'package:flutter/material.dart';
@@ -259,7 +260,7 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
                       // ),
                       CustomTextField(
                         icon: Icons.currency_rupee,
-                        name: 'price',
+                        name: 'price',keyBoardType: TextInputType.number,
                         labelName: 'Price',
                         placeHolder: 'Enter Price ',
                         validators: [FormBuilderValidators.required()],
@@ -427,7 +428,7 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
           });
 
           showSuccessToast("Offers Uploaded Successfully");
-          context.read<WeddingCubit>().fetchWeddingPhotos();
+          context.read<OfferCubit>().fetchOffersPhotos();
           _formKey.currentState?.reset();
           setState(() => _selectedImages = []);
           Navigator.pop(context,true);
@@ -482,7 +483,8 @@ class _UploadMultiImageState extends State<UploadMultiImage> {
 
           // Insert into Supabase table
           await supabase.from(tableName).insert({
-            'price': formData['price'].toString(),
+            'price': int.parse(formData['price'].toString()),
+            // 'price': formData['price'].toString(),
             'description': formData['description'].toString().toLowerCase(),
             'image1': imageUrls[0],
             'image2': imageUrls[1],

@@ -233,38 +233,6 @@ class _PhotographerScreenState extends State<PhotographerScreen> {
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-              decoration: BoxDecoration(
-                color: Colors.white, // Flipkart style -> white card
-                borderRadius: BorderRadius.circular(10.r),
-                border: Border.all(
-                  color: Colors.grey.shade300,
-                  width: 1,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.03),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Text(
-                "Starts from",
-                style: TextStyle(
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.bold,
-                  color:  Colors.black, // Flipkart dark blue
-                ),
-              ),
-            ),
-          ),
-
-
 
 //
 //           // Price

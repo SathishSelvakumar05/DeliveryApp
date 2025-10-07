@@ -23,6 +23,9 @@ class OfferCubit extends Cubit<OfferState> {
       showErrorToast("offers data fetched");
 
     } catch (e) {
+      print("ee");
+      print(e);
+      showErrorToast("$e");
       showErrorToast("failed to get offers data");
       emit(OfferState(isOfferLoading: false,isOfferData: []));
     }}
