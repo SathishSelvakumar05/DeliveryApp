@@ -12,9 +12,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'AutoLogin.dart';
 import 'CommonCubit/NetworkScreen/MainScreen.dart';
 import 'Firebase/EmailAccess.dart';
@@ -23,11 +25,19 @@ import 'PhotoShop/Cubit/CoupleCubit/couple_cubit.dart';
 import 'PhotoShop/Cubit/wedding_cubit.dart';
 import 'firebase_options.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:android_intent_plus/flag.dart';
+
+
+import 'overlay_entry.dart';
 final navigatorKey = GlobalKey<NavigatorState>();
 final FirebaseAuth auth = FirebaseAuth.instance;
 late DialogFlowtter dialogFlowtter;
 final SupaBase = Supabase.instance.client;
 
+const platform = MethodChannel('tracking_channel');
 
 // function to listen to background changes
 @pragma('vm:entry-point')
@@ -36,6 +46,38 @@ Future<void> firebaseBackgroundMessage(RemoteMessage message) async {
   // your background logic
   print('Handling a background message: ${message.messageId}');
 }
+Future<void> checkBatteryOptimizationPermission() async {
+  final deviceInfo = DeviceInfoPlugin();
+  final androidInfo = await deviceInfo.androidInfo;
+  final manufacturer = androidInfo.manufacturer?.toLowerCase() ?? '';
+  final sdkInt = androidInfo.version.sdkInt ?? 0;
+
+  print('Device manufacturer: $manufacturer');
+  print('Android SDK: $sdkInt');
+
+  // Open battery optimization settings
+  final intent = AndroidIntent(
+    action: 'android.settings.IGNORE_BATTERY_OPTIMIZATION_SETTINGS',
+  );
+  await intent.launch();
+
+  // Optional: Show custom message for specific brands
+  if (manufacturer.contains('vivo') ||
+      manufacturer.contains('oppo') ||
+      manufacturer.contains('xiaomi')) {
+    print("⚠️ Tell user to allow Autostart in system settings.");
+  }
+}
+
+Future<void> requestPermissions() async {
+  await [
+    Permission.location,
+    Permission.locationAlways,
+    Permission.locationWhenInUse,
+    Permission.notification,
+  ].request();
+}
+
 
 // Future _firebaseBackgroundMessage(RemoteMessage message) async {
 //   if (message.notification != null) {
@@ -75,7 +117,8 @@ void main() async{
   );
   // initialize firebase messaging
   await PushNotifications.init();
-  initRemoteConfig();
+ await requestPermissions();
+  // initRemoteConfig();
 
   // initialize local notifications
   // dont use local notifications for web platform
@@ -163,7 +206,8 @@ class MyApp extends StatelessWidget {
                home: MainScreen(child:
               // DentalDetectPage()
                // GenerateAIData()
-              AuoLoginScreen()
+               RapidoScreen()
+              // AuoLoginScreen()
               // MainLearnScreen()
                // OpenAIScreen()
                //DialogFlowChat()

@@ -1,9 +1,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- For accessing location -->
+
+    <!-- For running location foreground service (Android 14 requirement) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+
+    <!-- For background location (optional but useful if you want tracking even when app not open) -->
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+<!--    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />-->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /><!--FOR ANDROID 13-->
 
@@ -13,8 +22,8 @@
 <!--    <uses-permission android:name="android.permission.READ_SMS" />-->
 <!--    <uses-permission android:name="android.permission.CAMERA" />-->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<!--    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
+<!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -22,13 +31,39 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+<!--    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>-->
+
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
 
     <application
         android:label="@string/app_name"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:foregroundServiceType="location|dataSync"
+        android:usesCleartextTraffic="true"
+        >
+        <!-- Restart service on boot -->
+        <receiver android:name=".RestartReceiver" android:enabled="true" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".TrackingService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="location|dataSync"/>
+
+
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

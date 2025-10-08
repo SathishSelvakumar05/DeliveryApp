@@ -53,7 +53,7 @@ String currentUserEmail='';
   fetchcurrentUserEmail()async{
     currentUserEmail= await auth.currentUser?.email??"";
     if(currentUserEmail.isNotEmpty){
-      bool allowed = await isEmailAllowed(currentUserEmail);
+      bool allowed = true;
 
       if (allowed) {
         setState(() {
