@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:delivery_app/CommonCubit/network_cubit.dart';
 import 'package:delivery_app/PhotoShop/Cubit/GroupCubit/group_cubit.dart';
@@ -12,15 +14,22 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:location/location.dart';
+import 'package:system_alert_window/system_alert_window.dart';
 import 'AutoLogin.dart';
 import 'CommonCubit/NetworkScreen/MainScreen.dart';
-import 'Firebase/EmailAccess.dart';
 import 'Firebase/PushNotification/PushNotification.dart';
 import 'PhotoShop/Cubit/CoupleCubit/couple_cubit.dart';
 import 'PhotoShop/Cubit/wedding_cubit.dart';
+import 'alert_overlay/location_service.dart';
+import 'alert_overlay/mainScren.dart';
+import 'alert_overlay/new_service.dart';
+import 'alert_overlay/overlay_view.dart';
+import 'alert_overlay/system_alert.dart';
 import 'firebase_options.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -36,6 +45,7 @@ Future<void> firebaseBackgroundMessage(RemoteMessage message) async {
   // your background logic
   print('Handling a background message: ${message.messageId}');
 }
+
 
 // Future _firebaseBackgroundMessage(RemoteMessage message) async {
 //   if (message.notification != null) {
@@ -75,7 +85,8 @@ void main() async{
   );
   // initialize firebase messaging
   await PushNotifications.init();
-  initRemoteConfig();
+ // await initializeService();
+  // initRemoteConfig();
 
   // initialize local notifications
   // dont use local notifications for web platform
@@ -125,68 +136,87 @@ void main() async{
   runApp( BlocProvider(create: (_)=>NetworkCubit(),child: MyApp(),));
 
 }
-
-class MyApp extends StatelessWidget {
-  // final Connectivity? connectivity;
-  const MyApp({super.key,});
-  @override
-  Widget build(BuildContext context) {
-    return  MultiBlocProvider(
-      providers: [
-
-        BlocProvider<WeddingCubit>(create: (context)=>WeddingCubit()..fetchWeddingPhotos(),),
-        BlocProvider<CoupleCubit>(create: (context)=>CoupleCubit()..fetchCouplePhotos(),),
-        BlocProvider<KidsCubit>(create: (context)=>KidsCubit()..fetchKidsPhotos(),),
-        BlocProvider<SingleCubit>(create: (context)=>SingleCubit()..fetchSinglePhotos(),),
-        BlocProvider<GroupCubit>(create: (context)=>GroupCubit()..fetchGroupPhoto(),),
-
-        BlocProvider<OfferCubit>(create: (context)=>OfferCubit()..fetchOffersPhotos(),),
-        // BlocProvider<InternetCubit>(
-        //   create: (context) =>
-        //       InternetCubit(connectivity: connectivity),
-        // ),
-      ],
-      child: ScreenUtilInit(
-          minTextAdapt: true,
-          splitScreenMode: true,
-          designSize: const Size(412, 846),
-          builder: (context, child) {
-            return  MaterialApp(
-                    // locale: context.locale,
-                    // supportedLocales: context.supportedLocales,
-                    // localizationsDelegates: context.localizationDelegates,
-                    // navigatorKey: navigatorsKey,
-                    // theme: theme,
-                    // routes: appRoutes,
-                    initialRoute: '/',
-                    debugShowCheckedModeBanner: false,
-               home: MainScreen(child:
-              // DentalDetectPage()
-               // GenerateAIData()
-              AuoLoginScreen()
-              // MainLearnScreen()
-               // OpenAIScreen()
-               //DialogFlowChat()
-               ));
-
-            // MyHomePage(),);
-              // BlocBuilder<ThemeCubit, ThemeData>(
-              //   builder: (context, theme) {
-              //     return MaterialApp(
-              //       locale: context.locale,
-              //       supportedLocales: context.supportedLocales,
-              //       localizationsDelegates: context.localizationDelegates,
-              //       navigatorKey: navigatorsKey,
-              //       theme: theme,
-              //       routes: appRoutes,
-              //       initialRoute: '/',
-              //       debugShowCheckedModeBanner: false,
-              //     );
-              //   });
-          }),
-    );
-  }
-
+@pragma("vm:entry-point")
+void overlayMain() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const MaterialApp(color: Colors.red,showPerformanceOverlay: true,title: "daada",
+    debugShowCheckedModeBanner: false,
+    home: OverlayView(),
+  ));
 }
+
+
+
+
+
+
+// class MyApp extends StatefulWidget {
+//   // final Connectivity? connectivity;
+//   const MyApp({super.key,});
+//
+//   @override
+//   State<MyApp> createState() => _MyAppState();
+// }
+//
+// class _MyAppState extends State<MyApp> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return  MultiBlocProvider(
+//       providers: [
+//
+//         BlocProvider<WeddingCubit>(create: (context)=>WeddingCubit()..fetchWeddingPhotos(),),
+//         BlocProvider<CoupleCubit>(create: (context)=>CoupleCubit()..fetchCouplePhotos(),),
+//         BlocProvider<KidsCubit>(create: (context)=>KidsCubit()..fetchKidsPhotos(),),
+//         BlocProvider<SingleCubit>(create: (context)=>SingleCubit()..fetchSinglePhotos(),),
+//         BlocProvider<GroupCubit>(create: (context)=>GroupCubit()..fetchGroupPhoto(),),
+//
+//         BlocProvider<OfferCubit>(create: (context)=>OfferCubit()..fetchOffersPhotos(),),
+//         // BlocProvider<InternetCubit>(
+//         //   create: (context) =>
+//         //       InternetCubit(connectivity: connectivity),
+//         // ),
+//       ],
+//       child: ScreenUtilInit(
+//           minTextAdapt: true,
+//           splitScreenMode: true,
+//           designSize: const Size(412, 846),
+//           builder: (context, child) {
+//             return  MaterialApp(
+//                     // locale: context.locale,
+//                     // supportedLocales: context.supportedLocales,
+//                     // localizationsDelegates: context.localizationDelegates,
+//                     // navigatorKey: navigatorsKey,
+//                     // theme: theme,
+//                     // routes: appRoutes,
+//                     initialRoute: '/',
+//                     debugShowCheckedModeBanner: false,
+//                home: MainScreen(child:
+//               // DentalDetectPage()
+//                // GenerateAIData()
+//               // AuoLoginScreen()
+//                    SystemAlert()
+//               // MainLearnScreen()
+//                // OpenAIScreen()
+//                //DialogFlowChat()
+//                ));
+//
+//             // MyHomePage(),);
+//               // BlocBuilder<ThemeCubit, ThemeData>(
+//               //   builder: (context, theme) {
+//               //     return MaterialApp(
+//               //       locale: context.locale,
+//               //       supportedLocales: context.supportedLocales,
+//               //       localizationsDelegates: context.localizationDelegates,
+//               //       navigatorKey: navigatorsKey,
+//               //       theme: theme,
+//               //       routes: appRoutes,
+//               //       initialRoute: '/',
+//               //       debugShowCheckedModeBanner: false,
+//               //     );
+//               //   });
+//           }),
+//     );
+//   }
+// }
 
 

@@ -14,16 +14,16 @@ class FirebaseFireStore {
     try {
       DocumentSnapshot document =
       await db.collection('users').doc(firebaseUid).get();
-      if (document.exists) {
-        print("irukuda");
-        return;
-      }
-      else {
+      // if (document.exists) {
+      //   print("irukuda");
+      //   return;
+      // }
+      // else {
         print("${"document.id"}");
         print("${document.id}");
         final userMap = user.toMap();
         await db.collection('users').doc(user.firebaseUid).set(userMap);
-      }
+      // }
     } catch (err) {
       showErrorToast("Failed to insert user");
       throw FirebaseAuthException(
