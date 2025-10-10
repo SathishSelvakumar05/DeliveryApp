@@ -104,13 +104,13 @@ plugins {
 
 android {
     namespace = "com.example.delivery_app"
-    compileSdk = 35
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     defaultConfig {
         applicationId "com.example.delivery_app"
         minSdk = 23
-        targetSdk = 34
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         multiDexEnabled true
@@ -177,12 +177,25 @@ android {
 }
 
 dependencies {
-    implementation "com.google.firebase:firebase-auth:22.3.1"
-
-    implementation "androidx.fragment:fragment:1.8.2"
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'tech.gusavila92:java-android-websocket-client:1.2.2'
+    implementation platform('com.google.firebase:firebase-bom:32.2.0') // if using Firestore
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.0.3"
-    implementation platform("com.google.firebase:firebase-bom:33.16.0")
+
+
+//    implementation 'com.google.code.gson:gson:2.10.1'
+//    implementation 'tech.gusavila92:java-android-websocket-client:1.2.2'
+//
+//    implementation "com.google.firebase:firebase-auth:22.3.1"
+//
+//    implementation "androidx.fragment:fragment:1.8.2"
+//    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.0.3"
+//    implementation platform("com.google.firebase:firebase-bom:33.16.0")
 }
+
 
 
 

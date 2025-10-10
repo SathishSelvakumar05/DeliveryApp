@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:delivery_app/CommonCubit/network_cubit.dart';
@@ -19,6 +20,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:location/location.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:system_alert_window/system_alert_window.dart';
 import 'AutoLogin.dart';
 import 'CommonCubit/NetworkScreen/MainScreen.dart';
@@ -79,6 +81,8 @@ void main() async{
     url: dotenv.env["SUPABASE_URL"]!,
     anonKey: dotenv.env["SUPABASE_ANON_KEY"]!,
   );
+  await Permission.notification.request();
+
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -136,14 +140,86 @@ void main() async{
   runApp( BlocProvider(create: (_)=>NetworkCubit(),child: MyApp(),));
 
 }
-@pragma("vm:entry-point")
+
+@pragma('vm:entry-point')
 void overlayMain() {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MaterialApp(color: Colors.red,showPerformanceOverlay: true,title: "daada",
-    debugShowCheckedModeBanner: false,
-    home: OverlayView(),
-  ));
+  SystemAlertWindow.overlayListener.listen((event) {
+    print("Overlay received: $event");
+  });
 }
+
+// @pragma("vm:entry-point")
+// void overlayMain() {
+//   runApp(const OverlayEntryPoint());
+// }
+
+class OverlayEntryPoint extends StatefulWidget {
+  const OverlayEntryPoint({Key? key}) : super(key: key);
+
+  @override
+  State<OverlayEntryPoint> createState() => _OverlayEntryPointState();
+}
+
+class _OverlayEntryPointState extends State<OverlayEntryPoint> {
+  List<String> items = ["Data 1", "Data 2", "Data 3", "Data 4", "Data 5"];
+
+  @override
+  // void initState() {
+  //   super.initState();
+  //
+  //   // Listen for data from the main app
+  //   SystemAlertWindow.overlayListener.listen((event) {
+  //     debugPrint("Overlay got event: $event");
+  //     if (event is String && event.startsWith("add:")) {
+  //       setState(() {
+  //         items.add(event.replaceFirst("add:", ""));
+  //       });
+  //     }
+  //   });
+  // }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Material(
+        color: Colors.white,
+        child: SafeArea(
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                color: Colors.blue,
+                width: double.infinity,
+                child: Text(
+                  "Live Data Overlay",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    // fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(items[index]),
+                      leading: const Icon(Icons.data_usage),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
 
 
 
