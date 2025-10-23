@@ -13,7 +13,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../Components/AppBarComponents.dart';
-import '../../Firebase/EmailAccess.dart';
+// import '../../Firebase/EmailAccess.dart';
 import '../../PhotoShop/Cubit/wedding_cubit.dart';
 import '../../PhotoShop/Screen/UploadMultiImage.dart';
 import '../../PhotoShop/Screen/single_photo_screen.dart';
@@ -53,7 +53,8 @@ String currentUserEmail='';
   fetchcurrentUserEmail()async{
     currentUserEmail= await auth.currentUser?.email??"";
     if(currentUserEmail.isNotEmpty){
-      bool allowed = await isEmailAllowed(currentUserEmail);
+      bool allowed =true;
+      // bool allowed = await isEmailAllowed(currentUserEmail);
 
       if (allowed) {
         setState(() {
