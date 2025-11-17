@@ -1,110 +1,58 @@
 package com.example.delivery_app
 
-import android.content.ComponentName
-import android.content.pm.PackageManager
-import android.os.Bundle
-import io.flutter.embedding.android.FlutterActivity
-import java.util.Calendar
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodChannel
+import io.flutter.embedding.android.FlutterFragmentActivity
+import java.io.File
+import com.tom_roush.pdfbox.pdmodel.PDDocument
 
-class MainActivity: FlutterActivity() {
+class MainActivity : FlutterFragmentActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        updateLauncherIcon()
-    }
+    // Existing config channel
+//    private val CONFIG_CHANNEL = "com.enexpense.com/config"
 
-    override fun onResume() {
-        super.onResume()
-        updateLauncherIcon()
-    }
+    // New PDF password channel
+    private val PDF_PASSWORD_CHANNEL = "pdf_password_channel"
 
-    private fun updateLauncherIcon() {
-        val now = Calendar.getInstance()
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
 
-        // Target date: August 25, 2025
-        val targetDate = Calendar.getInstance().apply {
-            set(2025, Calendar.AUGUST, 26, 9, 42, 0)
-        }
+        // New method channel for PDF password decryption
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, PDF_PASSWORD_CHANNEL)
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "decryptPdf" -> {
+                        val filePath = call.argument<String>("filePath")
+                        val password = call.argument<String>("password")
 
-        val endDate = Calendar.getInstance().apply {
-            set(2025, Calendar.AUGUST, 26, 9, 45, 0)
-        }
+                        if (filePath.isNullOrEmpty() || password.isNullOrEmpty()) {
+                            result.error("INVALID_ARGS", "File path or password missing", null)
+                            return@setMethodCallHandler
+                        }
 
-        val pm = packageManager
+                        try {
+                            val inputFile = File(filePath)
+                            val document = PDDocument.load(inputFile, password)
 
-        if (now.after(targetDate) && now.before(endDate)) {
-            // Enable special alias
-            pm.setComponentEnabledSetting(
-                ComponentName(this, "com.example.delivery_app.MainActivityNewYear"),
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                PackageManager.DONT_KILL_APP
-            )
-            // Disable default alias
-            pm.setComponentEnabledSetting(
-                ComponentName(this, "com.example.delivery_app.MainActivity"),
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                PackageManager.DONT_KILL_APP
-            )
-        } else {
-            // Revert to default alias
-            pm.setComponentEnabledSetting(
-                ComponentName(this, "com.example.delivery_app.MainActivityNewYear"),
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                PackageManager.DONT_KILL_APP
-            )
-            pm.setComponentEnabledSetting(
-                ComponentName(this, "com.example.delivery_app.MainActivity"),
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                PackageManager.DONT_KILL_APP
-            )
-        }
+                            document.setAllSecurityToBeRemoved(true)
+
+                            val outputFile = File(cacheDir, "decrypted_${System.currentTimeMillis()}.pdf")
+
+                            document.save(outputFile)
+                            document.close()
+
+                            result.success(outputFile.absolutePath)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            result.error("PDF_DECRYPT_ERROR", e.message, null)
+                        }
+                    }
+
+                    else -> result.notImplemented()
+                }
+            }
     }
 }
 
 
-
-//package com.example.delivery_app
-//
-//import io.flutter.embedding.android.FlutterActivity
-//
-//
-////class MainActivity: FlutterActivity()
-//
-////package com.example.change_icon
-//
-//
-//import io.flutter.embedding.android.FlutterActivity
-//import android.os.Bundle
-//import androidx.annotation.NonNull
-//import android.util.Log
-//import com.example.change_icon.IconManager
-//
-//
-//class MainActivity: FlutterActivity() {
-//    override fun onCreate(@NonNull savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        Log.d("MainActivity", "onCreate called")
-//        updateIcon()
-//    }
-//
-//
-//    private fun updateIcon() {
-//        try {
-//            IconManager(this).updateAppIcon()
-//        } catch (e: Exception) {
-//            Log.e("MainActivity", "Error updating icon", e)
-//            e.printStackTrace()
-//        }
-//    }
-//}
-
-//package com.example.delivery_app
-//import io.flutter.embedding.android.FlutterActivity
-//import android.os.Bundle
-//import android.view.WindowManager
-////import io.flutter.embedding.android.FlutterActivity
-//
-//class MainActivity: FlutterActivity() {
-//
-//}
 

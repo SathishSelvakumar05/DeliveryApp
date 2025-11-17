@@ -199,11 +199,11 @@ class _LoginFormState extends State<LoginForm> {
           MaterialPageRoute(builder: (context) => TryDashboard(),),
               (route) => false,
         );
-        // await Navigator.pushAndRemoveUntil(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => DashboardScreen(),),
-        //       (route) => false,
-        // );
+        await Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => DashboardScreen(),),
+              (route) => false,
+        );
       }else{
 
 print("okkk");

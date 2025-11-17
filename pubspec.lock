@@ -321,6 +321,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.10.5"
+  dart_earcut:
+    dependency: transitive
+    description:
+      name: dart_earcut
+      sha256: e485001bfc05dcbc437d7bfb666316182e3522d4c3f9668048e004d0eb2ce43b
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   dbus:
     dependency: transitive
     description:
@@ -341,10 +349,10 @@ packages:
     dependency: "direct main"
     description:
       name: dialog_flowtter
-      sha256: "03b0dd97b6b1e148f3c71378e6ab340fab1b3a77a48ca1aa5202fc25862e9f3f"
+      sha256: "2cdd694dbbb8673675ffb6a34d29d1bed922e38e5ed4ae63473b3c408ef82b19"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.3"
+    version: "0.2.0-nullsafety.0"
   dio:
     dependency: "direct main"
     description:
@@ -652,29 +660,29 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_map:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_map
-      sha256: "52c65a977daae42f9aae6748418dd1535eaf27186e9bac9bf431843082bc75a3"
+      sha256: "2ecb34619a4be19df6f40c2f8dce1591675b4eff7a6857bd8f533706977385da"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.0"
+    version: "7.0.2"
   flutter_map_marker_cluster:
     dependency: "direct main"
     description:
       name: flutter_map_marker_cluster
-      sha256: "362088b16311b6743a7930857129ec6c7c807ecca777fe1033c0ad6688339e36"
+      sha256: "2c1fb4d7a2105c4bbeb89be215320507f4b71b2036df4341fab9d2aa677d3ae9"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.1"
+    version: "1.4.0"
   flutter_map_marker_popup:
     dependency: transitive
     description:
       name: flutter_map_marker_popup
-      sha256: "7cf30fab25ffe1ba04a9e0fbe1227f44a83c73256d4d70be1c26cf141ce5c41d"
+      sha256: a7540538114b5d1627ab67b498273d66bc36090385412ae49ef215af4a2861c5
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.0"
+    version: "7.0.0"
   flutter_native_splash:
     dependency: "direct main"
     description:
@@ -885,6 +893,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.5"
+  google_fonts:
+    dependency: "direct main"
+    description:
+      name: google_fonts
+      sha256: "517b20870220c48752eafa0ba1a797a092fb22df0d89535fd9991e86ee2cdd9c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.3.2"
+  google_generative_ai:
+    dependency: "direct main"
+    description:
+      name: google_generative_ai
+      sha256: "71f613d0247968992ad87a0eb21650a566869757442ba55a31a81be6746e0d1f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.7"
   google_identity_services_web:
     dependency: transitive
     description:
@@ -893,6 +917,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.3+1"
+  google_mlkit_commons:
+    dependency: transitive
+    description:
+      name: google_mlkit_commons
+      sha256: "8f40fbac10685cad4715d11e6a0d86837d9ad7168684dfcad29610282a88e67a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.11.0"
+  google_mlkit_text_recognition:
+    dependency: "direct main"
+    description:
+      name: google_mlkit_text_recognition
+      sha256: "96173ad4dd7fd06c660e22ac3f9e9f1798a517fe7e48bee68eeec83853224224"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.15.0"
   google_sign_in:
     dependency: "direct main"
     description:
@@ -969,10 +1009,10 @@ packages:
     dependency: transitive
     description:
       name: http
-      sha256: "5895291c13fa8a3bd82e76d5627f69e0d85ca6a30dcac95c4ea19a5d555879c2"
+      sha256: bb2ce4590bc2667c96f318d68cac1b5a7987ec819351d32b1c987239a815e007
       url: "https://pub.dev"
     source: hosted
-    version: "0.13.6"
+    version: "1.5.0"
   http_parser:
     dependency: transitive
     description:
@@ -1142,13 +1182,13 @@ packages:
     source: hosted
     version: "0.3.1"
   latlong2:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: latlong2
-      sha256: "08ef7282ba9f76e8495e49e2dc4d653015ac929dce5f92b375a415d30b407ea0"
+      sha256: "98227922caf49e6056f91b6c56945ea1c7b166f28ffcd5fb8e72fc0b453cc8fe"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.2"
+    version: "0.9.1"
   leak_tracker:
     dependency: transitive
     description:
@@ -1229,6 +1269,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.11"
+  logger:
+    dependency: transitive
+    description:
+      name: logger
+      sha256: a7967e31b703831a893bbc3c3dd11db08126fe5f369b5c648a36f821979f5be3
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.6.2"
   logging:
     dependency: transitive
     description:
@@ -1493,6 +1541,23 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.11.3"
+  pdf_render:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: b6590dbcee7b3d58109c7b4bb10b4c286bc327a1
+      url: "https://github.com/pujasri25/flutter_pdf_render.git"
+    source: git
+    version: "1.4.12"
+  pdf_widget_wrapper:
+    dependency: transitive
+    description:
+      name: pdf_widget_wrapper
+      sha256: c930860d987213a3d58c7ec3b7ecf8085c3897f773e8dc23da9cae60a5d6d0f5
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   permission_handler:
     dependency: "direct main"
     description:
@@ -1605,6 +1670,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  printing:
+    dependency: "direct main"
+    description:
+      name: printing
+      sha256: "482cd5a5196008f984bb43ed0e47cbfdca7373490b62f3b27b3299275bf22a93"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.14.2"
   proj4dart:
     dependency: transitive
     description:
@@ -1914,22 +1987,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.4"
-  tuple:
-    dependency: transitive
-    description:
-      name: tuple
-      sha256: a97ce2013f240b2f3807bcbaf218765b6f301c3eff91092bcfa23a039e7dd151
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.2"
-  twilio_flutter:
-    dependency: "direct main"
-    description:
-      name: twilio_flutter
-      sha256: c81572eb5246d7f522852795f69b36817df62de4746a5e1d9af435d015e5cd25
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.9"
   typed_data:
     dependency: transitive
     description:

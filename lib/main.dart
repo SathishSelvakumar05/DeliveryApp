@@ -17,12 +17,14 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'AutoLogin.dart';
 import 'CommonCubit/NetworkScreen/MainScreen.dart';
-import 'Firebase/EmailAccess.dart';
+// import 'Firebase/EmailAccess.dart';
 import 'Firebase/PushNotification/PushNotification.dart';
 import 'PhotoShop/Cubit/CoupleCubit/couple_cubit.dart';
 import 'PhotoShop/Cubit/wedding_cubit.dart';
 import 'firebase_options.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'order_app/screen/splash.dart';
 final navigatorKey = GlobalKey<NavigatorState>();
 final FirebaseAuth auth = FirebaseAuth.instance;
 late DialogFlowtter dialogFlowtter;
@@ -75,7 +77,7 @@ void main() async{
   );
   // initialize firebase messaging
   await PushNotifications.init();
-  initRemoteConfig();
+  // initRemoteConfig();
 
   // initialize local notifications
   // dont use local notifications for web platform
@@ -163,7 +165,9 @@ class MyApp extends StatelessWidget {
                home: MainScreen(child:
               // DentalDetectPage()
                // GenerateAIData()
-              AuoLoginScreen()
+               SplashScreen()
+              // AuoLoginScreen()
+              // AuoLoginScreen()
               // MainLearnScreen()
                // OpenAIScreen()
                //DialogFlowChat()
