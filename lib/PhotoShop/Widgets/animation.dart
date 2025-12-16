@@ -171,6 +171,7 @@ class _PhotographerScreenState extends State<PhotographerScreen> {
                             fontSize: 18.sp,
                             fontWeight: FontWeight.bold,
                             color: const Color(0xFF0C1D37), // Flipkart dark blue
+                            // color: const Color(0xFF0C1D37), // Flipkart dark blue
                           ),
                         ),
                         // SizedBox(width: 6.w),
@@ -201,6 +202,7 @@ class _PhotographerScreenState extends State<PhotographerScreen> {
                       padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                       decoration: BoxDecoration(
                         color: Colors.blue.shade50,
+                        // color: Colors.blue.shade50,
                         borderRadius: BorderRadius.circular(4.r),
                       ),
                       child: Text(
@@ -209,6 +211,7 @@ class _PhotographerScreenState extends State<PhotographerScreen> {
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.blue.shade800,
+                          // color: Colors.blue.shade800,
                         ),
                       ),
                     ),
@@ -233,88 +236,20 @@ class _PhotographerScreenState extends State<PhotographerScreen> {
               ),
             ),
           ),
-
-//
-//           // Price
-//           // Price
-//           Padding(
-//             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-//             child: Row(
-//               crossAxisAlignment: CrossAxisAlignment.center,
-//               children: [
-//                 Text(
-//                   "Starts from ",
-//                   style: TextStyle(
-//                     fontSize: 16.sp,
-//                     color: Colors.black87,
-//                   ),
-//                 ),
-//                 Container(
-//                   padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-//                   decoration: BoxDecoration(
-//                     color: const Color(0xFF0C1D37), // dark background
-//                     borderRadius: BorderRadius.circular(8.r),
-//                     boxShadow: [
-//                       BoxShadow(
-//                         color: Colors.black.withOpacity(0.15),
-//                         blurRadius: 6,
-//                         offset: const Offset(0, 3),
-//                       ),
-//                     ],
-//                   ),
-//                   child: Row(
-//                     children: [
-//                       Text(
-//                         "₹", // Indian Rupee Symbol
-//                         style: TextStyle(
-//                           fontSize: 18.sp,
-//                           fontWeight: FontWeight.w600,
-//                           color: Colors.white,
-//                         ),
-//                       ),
-//                       SizedBox(width: 2.w),
-//                       Text(
-//                         widget.price,
-//                         style: TextStyle(
-//                           fontSize: 20.sp,
-//                           fontWeight: FontWeight.bold,
-//                           color: Colors.white,
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//
-//
-// // Description
-//           Padding(
-//             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
-//             child: Text(
-//               widget.description,
-//               style: TextStyle(
-//                 fontSize: 14.sp,
-//                 color: Colors.grey.shade800,
-//                 height: 1.5,
-//               ),
-//             ),
-//           ),
-
-          // Action Buttons
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               // actionIcon(Iconsax.global, "Website"),
               GestureDetector(
                   onTap: (){
-                    sendSMS("+919345867913");
+                    sendSMS("+916381941959");
+                    // sendSMS("+919345867913");vfx
                   },
                   child: actionIcon(Iconsax.message, "Message")),
               GestureDetector(
                 onTap: (){
-                  callNumber("+919345867913");
+                  callNumber("+916381941959");
+                  // callNumber("+919345867913");vfx
 
                 },
                   child: actionIcon(Iconsax.call, "Call")),
@@ -343,12 +278,18 @@ class _PhotographerScreenState extends State<PhotographerScreen> {
       final file = File('${tempDir.path}/product_image.jpg');
       await file.writeAsBytes(bytes);
 
-      // Friendly customer message
       final message = """
-🎨 Turn your photos into masterpieces – only on Vfz APP!  
-Download now: https://play.google.com/store/apps/details?id=com.yourapp
- 
+🌟 Unlock your potential and experience effortless ordering — only on Bobo App!  
+Order your product now directly in the app and bring your creativity to life.  
 """;
+
+
+      // Friendly customer message
+//       final message = """
+// 🎨 Turn your photos into masterpieces – only on  APP!
+// Download now: https://play.google.com/store/apps/details?id=com.yourapp
+//
+// """;
       // Friendly customer message
 //       final message = """
 // Hello,

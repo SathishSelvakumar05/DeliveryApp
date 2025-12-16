@@ -46,8 +46,10 @@ class CommonAppBarWidget extends StatelessWidget
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                       colors: <Color>[
-                        Color(0xFF0C1D37) ,
-                        Color(0xFF0C1D37),
+                        // Color(0xFF0C1D37) ,
+                        const Color(0xFF66016D),
+                        const Color(0xFF66016D)
+
 
                       ]))),
           titleTextStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.sp),

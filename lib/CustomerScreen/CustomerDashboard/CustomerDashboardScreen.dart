@@ -13,7 +13,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../Components/AppBarComponents.dart';
-import '../../Firebase/EmailAccess.dart';
+// import '../../Firebase/EmailAccess.dart';
 import '../../PhotoShop/Cubit/wedding_cubit.dart';
 import '../../PhotoShop/Screen/UploadMultiImage.dart';
 import '../../PhotoShop/Screen/single_photo_screen.dart';
@@ -21,6 +21,7 @@ import '../../PhotoShop/Widgets/CarouselSlider.dart';
 import '../../PhotoShop/Widgets/SingleProduct.dart';
 import '../../PhotoShop/Widgets/animation.dart';
 import '../../main.dart';
+import '../CustomerChatBot/ChartScreen.dart';
 
 class TryDashboard extends StatefulWidget {
   TryDashboard({super.key});
@@ -53,7 +54,8 @@ String currentUserEmail='';
   fetchcurrentUserEmail()async{
     currentUserEmail= await auth.currentUser?.email??"";
     if(currentUserEmail.isNotEmpty){
-      bool allowed = await isEmailAllowed(currentUserEmail);
+      bool allowed = true;
+      // bool allowed = await isEmailAllowed(currentUserEmail);
 
       if (allowed) {
         setState(() {
@@ -86,24 +88,44 @@ String currentUserEmail='';
               Container(
                 height: 40.h,
                 width: 40.w,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.blue, // background color
+                  color: Colors.white,
                 ),
                 child: ClipOval(
-                  child: Image.asset(
-                    "assets/images/logo.jpg",
-                    fit: BoxFit.cover,
+                  child: Transform.scale(
+                    scale: 1.35,  // <-- lite zoom effect
+                    child: Image.asset(
+                      "assets/images/vfx_logo.png",
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
-              SizedBox(width: 10.w),
+              Spacer(),
               Text(
-                "VFX Advertisement",
+                "Bobo Petals",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
               Spacer(),
              // if(isPermission)
+              GestureDetector(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => CustomerChatScreen(userId: "123",),));
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: CircleAvatar(
+                    radius: 20.sp,
+                    backgroundColor: Colors.blue.shade400,
+                    child: Icon(
+                      Icons.message,
+                      color: Colors.white,
+                      size: 22,
+                    ),
+                  ),
+                ),
+              ),
               GestureDetector(
                 onTap: (){
                   Navigator.push(context, MaterialPageRoute(builder: (context) => UploadMultiImage(),));
@@ -112,7 +134,7 @@ String currentUserEmail='';
                   padding: const EdgeInsets.only(left: 20.0),
                   child: CircleAvatar(
                     radius: 20.sp,
-                    backgroundColor: Colors.pink.shade400,
+                    backgroundColor: Colors.green.shade400,
                     child: Icon(
                       Icons.add,
                       color: Colors.white,
@@ -174,26 +196,26 @@ String currentUserEmail='';
                           ),
                         ),
                         SizedBox(width: 5.w,),
-                        Expanded(
-                            flex: 1,
-                            child: GestureDetector(
-                              onTap: (){
-                                showModalBottomSheet(context: context, builder: (context) {
-                                  double start=12;
-                                  double end=112;
-                                  return _bottomSheetFilter(start: 10,end:200 );
-                                },);
-                              },
-                              child: Container(
-                                height: 43.h,
-                                width: double.infinity,
-                                  // padding:  EdgeInsets.symmetric(horizontal: 12).r,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade200,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Icon(Icons.filter_alt_sharp,size: 30.sp,color: Color(0xFF0C1D37),)),
-                            ))
+                        // Expanded(
+                        //     flex: 1,
+                        //     child: GestureDetector(
+                        //       onTap: (){
+                        //         showModalBottomSheet(context: context, builder: (context) {
+                        //           double start=12;
+                        //           double end=112;
+                        //           return _bottomSheetFilter(start: 10,end:200 );
+                        //         },);
+                        //       },
+                        //       child: Container(
+                        //         height: 43.h,
+                        //         width: double.infinity,
+                        //           // padding:  EdgeInsets.symmetric(horizontal: 12).r,
+                        //           decoration: BoxDecoration(
+                        //             color: Colors.grey.shade200,
+                        //             borderRadius: BorderRadius.circular(12),
+                        //           ),
+                        //           child: Icon(Icons.filter_alt_sharp,size: 30.sp,color: Color(0xFF0C1D37),)),
+                        //     ))
                       ],
                     ),
                      SizedBox(height: 16.h),
@@ -225,14 +247,14 @@ String currentUserEmail='';
 
                         return Column(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Trending Offers",
-                                    style: TextStyle(
-                                        fontSize: 17.sp, fontWeight: FontWeight.bold)),
-                              ],
-                            ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //   children: [
+                            //     Text("Trending Offers",
+                            //         style: TextStyle(
+                            //             fontSize: 17.sp, fontWeight: FontWeight.bold)),
+                            //   ],
+                            // ),
                             SizedBox(height: 10.h,),
                             ImageCarousel(
                               imageUrls: imageUrls,

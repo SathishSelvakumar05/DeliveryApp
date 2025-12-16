@@ -22,10 +22,10 @@ class WeddingCubit extends Cubit<WeddingState> {
           .toList();
 
       emit(WeddingState(isWeddingLoading: false,weddingdata: weddingData));
-      showErrorToast("Wedding data fetched");
+      // showErrorToast("CustomerChatScreen");
 
     } catch (e) {
-      showErrorToast("failed to get wedding data");
+      showErrorToast("failed to get data");
       emit(WeddingState(isWeddingLoading: false,weddingdata: []));
     }}
 

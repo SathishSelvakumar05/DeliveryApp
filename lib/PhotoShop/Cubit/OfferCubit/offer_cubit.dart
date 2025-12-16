@@ -20,7 +20,7 @@ class OfferCubit extends Cubit<OfferState> {
           .toList();
 
       emit(OfferState(isOfferLoading: false,isOfferData: weddingData));
-      showErrorToast("offers data fetched");
+      // showErrorToast("offers data fetched");
 
     } catch (e) {
       print("ee");

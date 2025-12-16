@@ -146,7 +146,13 @@ android {
 
     buildTypes {
         release {
+            shrinkResources false       // <-- add this line
+
+
+//            signingConfig signingConfigs.release  // make sure you have a release key
+            minifyEnabled false
             signingConfig signingConfigs.debug
+
         }
     }
 
